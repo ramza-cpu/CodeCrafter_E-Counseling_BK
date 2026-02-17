@@ -201,16 +201,30 @@ const doughnutChart = new Chart(doughnutCtx, {
     }
 });
 
-// Optional: Add interactivity to sidebar
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        this.classList.add('active');
-    });
-});
+ const sidebar   = document.getElementById('sidebar');
+        const overlay   = document.getElementById('sidebarOverlay');
+        const mobileBtn = document.getElementById('mobileHamburgerBtn');
 
-// Optional: Hamburger menu toggle (for mobile)
-document.querySelector('.hamburger').addEventListener('click', function() {
-    document.querySelector('.sidebar').classList.toggle('mobile-open');
-});
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileBtn.addEventListener('click', openSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+                if (window.innerWidth <= 768) closeSidebar();
+            });
+        });
