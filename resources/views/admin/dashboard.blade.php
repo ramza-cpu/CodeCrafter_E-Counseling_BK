@@ -20,7 +20,7 @@
         <header class="header">
             <div class="logo-text">
             <img src="images/logo.png" width="90px" height="90px" alt="">
-                <p class="date">Kamis, 05 Februari 2026</p>
+                <p class="date"> {{ now()->timezone('Asia/Jakarta')->locale('id')->translatedFormat('l, d F Y') }}</p>
                 <h1>Hello, Admin! 👋</h1>
                 <p class="subtitle">Ada beberapa update baru untuk anda</p>
             </div>

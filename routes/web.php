@@ -17,6 +17,11 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.dashboard');
     });
+    // Route::get('/admin', fn() => view('admin.dashboard'));
+    // Route::get('/admin/chat', fn() => view('admin.chat'));
+    Route::get('/admin/scan', fn () => view('admin.scan'));
+    // Route::get('/admin/akumulasi', fn() => view('admin.akumulasi'));
+    // Route::get('/admin/log', fn() => view('admin.log'));
 
 });
 

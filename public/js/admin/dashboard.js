@@ -220,11 +220,15 @@ const doughnutChart = new Chart(doughnutCtx, {
         mobileBtn.addEventListener('click', openSidebar);
         overlay.addEventListener('click', closeSidebar);
 
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                this.classList.add('active');
-                if (window.innerWidth <= 768) closeSidebar();
-            });
-        });
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+
+        document.querySelectorAll('.nav-item')
+            .forEach(n => n.classList.remove('active'));
+
+        this.classList.add('active');
+
+        if (window.innerWidth <= 768) closeSidebar();
+    });
+});
+
