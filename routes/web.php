@@ -14,15 +14,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ================= ADMIN =================
 Route::middleware(['role:admin'])->group(function () {
 
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    });
-    // Route::get('/admin', fn() => view('admin.dashboard'));
-    // Route::get('/admin/chat', fn() => view('admin.chat'));
-    Route::get('/admin/scan', fn () => view('admin.scan'));
-    // Route::get('/admin/akumulasi', fn() => view('admin.akumulasi'));
-    // Route::get('/admin/log', fn() => view('admin.log'));
+    Route::get('/admin', fn() => view('admin.dashboard'))->name('dashboard');
 
+    Route::get('/pesan', fn() => view('admin.pesan'))->name('pesan');
+    Route::get('/akumulasi', fn() => view('admin.akumulasi'))->name('akumulasi');
+    Route::get('/scan', fn() => view('admin.scan'))->name('scan');
+    Route::get('/cetak', fn() => view('admin.cetak'))->name('cetak');
+    Route::get('/riwayat', fn() => view('admin.riwayat'))->name('riwayat');
 });
 
 // ================= GURU =================

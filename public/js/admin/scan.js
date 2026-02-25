@@ -28,7 +28,7 @@ const overlay = document.getElementById("sidebarOverlay");
 function openSidebar() {
   sidebar.classList.add("active");
   overlay.classList.add("active");
-  document.body.style.overflow = "hidden"; // Prevent scroll saat sidebar terbuka
+  document.body.style.overflow = "hidden";
 }
 
 // Fungsi untuk menutup sidebar
@@ -73,7 +73,10 @@ const menuItems = document.querySelectorAll(".menu li");
 menuItems.forEach((item) => {
   item.addEventListener("click", () => {
     // Remove active dari semua item
-    document.querySelector(".menu .active")?.classList.remove("active");
+    const activeItem = document.querySelector(".menu .active");
+    if (activeItem) {
+      activeItem.classList.remove("active");
+    }
     // Tambah active ke item yang diklik
     item.classList.add("active");
     
@@ -98,86 +101,103 @@ if (logoutBtn) {
 }
 
 // ==========================
-// CHARTS
+// QR SCANNER
 // ==========================
+let html5QrCode;
 
-// ================= DONUT =================
-const donutCanvas = document.getElementById("donutChart");
-if (donutCanvas) {
-  new Chart(donutCanvas, {
-    type: "doughnut",
-    data: {
-      labels: ["Tertib", "Pembinaan", "Prioritas/SP"],
-      datasets: [
-        {
-          data: [62.5, 25, 12.5],
-          backgroundColor: ["#7ea9e1", "#f4b400", "#ff6b6b"],
-          borderWidth: 0,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
+// Dummy database murid
+const students = {
+  1234567890: {
+    nama: "Budi Santoso",
+    kelas: "X IPA 1",
+    jurusan: "IPA",
+  },
+  9876543210: {
+    nama: "Siti Aminah",
+    kelas: "XI IPS 2",
+    jurusan: "IPS",
+  },
+};
+
+function tampilkanData(kode) {
+  const resultDiv = document.getElementById("result");
+  
+  if (students[kode]) {
+    const s = students[kode];
+    resultDiv.innerHTML = `
+      <div class="student-data">
+        <p><strong>Nama:</strong> ${s.nama}</p>
+        <p><strong>Kelas:</strong> ${s.kelas}</p>
+        <p><strong>Jurusan:</strong> ${s.jurusan}</p>
+        <p><strong>NISN:</strong> ${kode}</p>
+      </div>
+    `;
+    resultDiv.style.color = "inherit";
+  } else {
+    resultDiv.innerHTML = `
+      <p class="error-message">❌ Data tidak ditemukan untuk kode: <strong>${kode}</strong></p>
+    `;
+  }
 }
 
-// ================= LINE =================
-const lineCanvas = document.getElementById("lineChart");
-if (lineCanvas) {
-  new Chart(lineCanvas, {
-    type: "line",
-    data: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
-      datasets: [
-        {
-          label: "Jumlah Konseling",
-          data: [12, 19, 10, 15, 8, 20],
-          borderColor: "#7ea9e1",
-          backgroundColor: "rgba(126,169,225,0.2)",
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointBackgroundColor: "#7ea9e1",
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
+function startScanner() {
+  const readerDiv = document.getElementById("reader");
+  
+  // Jika scanner sudah aktif, stop dulu
+  if (html5QrCode && html5QrCode.isScanning) {
+    html5QrCode.stop().then(() => {
+      readerDiv.innerHTML = "";
+      initScanner();
+    });
+  } else {
+    initScanner();
+  }
 }
 
-// ================= BAR =================
-const barCanvas = document.getElementById("barChart");
-if (barCanvas) {
-  new Chart(barCanvas, {
-    type: "bar",
-    data: {
-      labels: ["Terlambat", "Bolos", "Konflik", "Pelanggaran"],
-      datasets: [
-        {
-          label: "Jumlah Kasus",
-          data: [10, 7, 14, 9],
-          backgroundColor: "#7ea9e1",
-          borderRadius: 8,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
+function initScanner() {  
+  html5QrCode = new Html5Qrcode("reader");
+
+  Html5Qrcode.getCameras()
+    .then((devices) => {
+      if (devices.length) {
+        html5QrCode.start(
+          devices[0].id,
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (qrMessage) => {
+            tampilkanData(qrMessage);
+            html5QrCode.stop();
+          },
+          (errorMessage) => {
+            // Ignore scan errors (normal saat lagi scan)
+          }
+        ).catch((err) => {
+          alert("Gagal memulai kamera: " + err);
+        });
+      } else {
+        alert("Tidak ada kamera yang terdeteksi!");
+      }
+    })
+    .catch(() => {
+      alert("Kamera tidak bisa diakses! Pastikan izin kamera sudah diberikan.");
+    });
 }
+
+function manualScan() {
+  const input = document.getElementById("manualInput");
+  const value = input.value.trim();
+  
+  if (value === "") {
+    alert("Silakan masukkan NISN atau kode QR!");
+    return;
+  }
+  
+  tampilkanData(value);
+  input.value = ""; // Clear input setelah scan
+}
+
+// Allow Enter key untuk manual scan
+document.getElementById("manualInput")?.addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    manualScan();
+  }
+});

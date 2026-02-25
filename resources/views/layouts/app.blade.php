@@ -8,27 +8,24 @@
     
     {{-- Global CSS --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- <link rel="stylesheet" href="app.css"> -->
+    <link rel="stylesheet" href="{{ asset('app.css') }}">
 
     {{-- Page-specific CSS --}}
     @stack('styles')
 
 </head>
 <body>
+    <div class="container">
 
-    {{-- Sidebar --}}
-    @include('components.sidebar')
+        {{-- Sidebar Component --}}
+        <x-sidebar />
 
-    <main class="main-content">
+        {{-- Main Content --}}
+        <main class="main">
+            @yield('content')
+        </main>
 
-        {{-- Header --}}
-        @yield('header')
-
-        {{-- Content --}}
-        @yield('content')
-
-    </main>
-
+</div>
     {{-- Global JS --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
