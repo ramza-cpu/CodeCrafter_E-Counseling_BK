@@ -12,26 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('surat', function (Blueprint $table) {
-            $table->bigIncrements('id_surat');
-            $table->unsignedBigInteger('id_siswa');
-            $table->unsignedBigInteger('id_guru');
+            $table->id('id_surat');
+
+            $table->foreignId('id_siswa')
+                ->constrained('siswa', 'id_siswa')
+                ->cascadeOnDelete();
+
+            $table->foreignId('id_guru')
+                ->constrained('guru', 'id_guru')
+                ->cascadeOnDelete();
 
             $table->string('nomor_surat', 50);
             $table->string('jenis_surat', 50);
             $table->dateTime('tanggal_cetak');
             $table->text('isi_surat');
 
+            $table->enum('status', ['pending', 'tercetak'])
+                ->default('pending');
+
             $table->timestamps();
-
-            $table->foreign('id_siswa')
-                ->references('id_siswa')->on('siswa')
-                ->onDelete('cascade');
-
-            $table->foreign('id_guru')
-                ->references('id_guru')->on('guru')
-                ->onDelete('cascade');
         });
-
     }
 
     /**

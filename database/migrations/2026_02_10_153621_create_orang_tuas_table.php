@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orang_tua', function (Blueprint $table) {
-            $table->bigIncrements('id_ortu');
-            $table->unsignedBigInteger('id_siswa');
-            $table->unsignedBigInteger('id_user');
+            $table->id('id_ortu');
+
+            $table->foreignId('id_siswa')
+                ->constrained('siswa', 'id_siswa')
+                ->cascadeOnDelete();
+
+            $table->foreignId('id_user')
+                ->constrained('users', 'id_user')
+                ->cascadeOnDelete();
 
             $table->string('nama_ayah', 32);
             $table->string('nama_ibu', 32);
@@ -22,16 +28,7 @@ return new class extends Migration
             $table->text('alamat');
 
             $table->timestamps();
-
-            $table->foreign('id_siswa')
-                ->references('id_siswa')->on('siswa')
-                ->onDelete('cascade');
-
-            $table->foreign('id_user')
-                ->references('id_user')->on('users')
-                ->onDelete('cascade');
         });
-
     }
 
     /**

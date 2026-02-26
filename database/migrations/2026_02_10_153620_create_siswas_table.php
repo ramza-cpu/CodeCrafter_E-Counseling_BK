@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('siswa', function (Blueprint $table) {
-            $table->bigIncrements('id_siswa');
-            $table->unsignedBigInteger('id_guru');
-            $table->unsignedBigInteger('id_user');
+            $table->id('id_siswa');
+
+            $table->foreignId('id_user')
+                ->constrained('users', 'id_user')
+                ->cascadeOnDelete();
 
             $table->string('nisn', 10)->unique();
             $table->string('nama', 32);
@@ -23,17 +25,9 @@ return new class extends Migration
             $table->text('alamat');
             $table->string('no_hp', 12);
             $table->integer('skor')->default(100);
-            $table->string('qr_code', 255)->nullable();
+            $table->string('qr_code')->nullable();
 
             $table->timestamps();
-
-            $table->foreign('id_guru')
-                ->references('id_guru')->on('guru')
-                ->onDelete('cascade');
-
-            $table->foreign('id_user')
-                ->references('id_user')->on('users')
-                ->onDelete('cascade');
         });
 
     }

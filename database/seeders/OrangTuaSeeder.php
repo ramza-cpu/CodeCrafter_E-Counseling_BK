@@ -2,26 +2,30 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class OrangTuaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('orang_tua')->insert([
-            [
-                'id_ortu' => 1,
-                'id_siswa' => 1,
-                'id_user' => 4,
-                'nama_ayah' => 'Rahmat Saputra',
-                'nama_ibu' => 'Siti Aminah',
-                'no_hp' => '081277788899',
-                'alamat' => 'Jl. Merdeka No.1',
-            ],
-        ]);
+        $faker = Faker::create('id_ID');
+
+        for ($i = 1; $i <= 15; $i++) {
+            DB::table('orang_tua')->insert([
+                'id_siswa' => $i, // asumsi siswa sudah 15 data
+                'id_user' => $i,  // asumsi user orang_tua juga 15 data
+                'nama_ayah' => $faker->name('male'),
+                'nama_ibu' => $faker->name('female'),
+
+                // Nomor HP format aman (maks 13 digit)
+                'no_hp' => '08'.$faker->numerify('##########'),
+
+                'alamat' => $faker->address(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

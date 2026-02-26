@@ -2,26 +2,27 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // ✅ penting
 
 class GuruSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('guru')->insert([
-            [
-                'id_guru' => 1,
-                'user_id' => 2,
-                'nip' => '198765432100000001',
-                'nama' => 'Budi Santoso',
-                'email' => 'budi@guru.com',
-                'no_hp' => '081234567890',
-                'jenis_kelamin' => 'L',
-            ],
-        ]);
+        $faker = Faker::create('id_ID');
+
+        for ($i = 1; $i <= 15; $i++) {
+            DB::table('guru')->insert([
+                'id_user' => $i,
+                'nip' => $faker->unique()->numerify('##################'),
+                'nama' => $faker->name(),
+                'email' => $faker->unique()->safeEmail(),
+                'no_hp' => '08'.$faker->numerify('##########'),
+                'jenis_kelamin' => $faker->randomElement(['L', 'P']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

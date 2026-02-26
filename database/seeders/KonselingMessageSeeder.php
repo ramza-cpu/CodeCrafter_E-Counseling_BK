@@ -4,27 +4,41 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
+use Faker\Factory as Faker;
 class KonselingMessageSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('konseling_message')->insert([
-            [
-                'id_message' => 1,
-                'id_session' => 1,
+        $pesanSiswa = [
+            'Saya merasa kesulitan belajar.',
+            'Saya kurang percaya diri.',
+            'Saya sulit fokus di kelas.',
+        ];
+
+        $pesanGuru = [
+            'Coba atur waktu belajar.',
+            'Kita bisa buat jadwal belajar.',
+            'Kamu punya potensi yang baik.',
+        ];
+
+        for ($i = 1; $i <= 15; $i++) {
+
+            DB::table('konseling_message')->insert([
+                'id_session' => rand(1,15),
                 'sender' => 'siswa',
-                'message' => 'Pak, saya ingin konsultasi.',
-            ],
-            [
-                'id_message' => 2,
-                'id_session' => 1,
+                'message' => $pesanSiswa[array_rand($pesanSiswa)],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('konseling_message')->insert([
+                'id_session' => rand(1,15),
                 'sender' => 'guru',
-                'message' => 'Silakan, ada yang bisa dibantu?',
-            ],
-        ]);
+                'message' => $pesanGuru[array_rand($pesanGuru)],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

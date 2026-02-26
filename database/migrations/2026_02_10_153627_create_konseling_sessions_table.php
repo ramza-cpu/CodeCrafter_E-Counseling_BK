@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('konseling_session', function (Blueprint $table) {
-            $table->bigIncrements('id_session');
-            $table->string('anonymous_code', 20)->unique();
-            $table->string('nickname', 20);
-            $table->enum('status', ['aktif', 'selesai'])->default('aktif');
-            $table->timestamps();
-        });
-
+Schema::create('konseling_session', function (Blueprint $table) {
+    $table->id('id_session');
+    $table->string('anonymous_code', 20)->unique();
+    $table->string('nickname', 20);
+    $table->enum('status', ['aktif','selesai'])->default('aktif');
+    $table->timestamps();
+});
     }
 
     /**

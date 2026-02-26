@@ -12,30 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pelanggaran', function (Blueprint $table) {
-            $table->bigIncrements('id_pelanggaran');
-            $table->unsignedBigInteger('id_siswa');
-            $table->unsignedBigInteger('id_jenis_pelanggaran');
-            $table->unsignedBigInteger('id_guru');
+            $table->id('id_pelanggaran');
 
-            $table->timestamp('tanggal');
+            $table->foreignId('id_siswa')
+                ->constrained('siswa', 'id_siswa')
+                ->cascadeOnDelete();
+
+            $table->foreignId('id_jenis_pelanggaran')
+                ->constrained('jenis_pelanggaran', 'id_jenis_pelanggaran')
+                ->cascadeOnDelete();
+
+            $table->foreignId('id_guru')
+                ->constrained('guru', 'id_guru')
+                ->cascadeOnDelete();
+
+            $table->timestamp('tanggal')->useCurrent();
             $table->integer('poin');
             $table->text('keterangan')->nullable();
 
             $table->timestamps();
-
-            $table->foreign('id_siswa')
-                ->references('id_siswa')->on('siswa')
-                ->onDelete('cascade');
-
-            $table->foreign('id_jenis_pelanggaran')
-                ->references('id_jenis_pelanggaran')->on('jenis_pelanggaran')
-                ->onDelete('cascade');
-
-            $table->foreign('id_guru')
-                ->references('id_guru')->on('guru')
-                ->onDelete('cascade');
         });
-
     }
 
     /**

@@ -12,21 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('konseling_log', function (Blueprint $table) {
-            $table->bigIncrements('id_log');
-            $table->unsignedBigInteger('id_session');
-            $table->unsignedBigInteger('id_siswa');
+            $table->id('id_log');
+
+            $table->foreignId('id_session')
+                ->constrained('konseling_session', 'id_session')
+                ->cascadeOnDelete();
+
+            $table->foreignId('id_siswa')
+                ->constrained('siswa', 'id_siswa')
+                ->cascadeOnDelete();
 
             $table->timestamps();
-
-            $table->foreign('id_session')
-                ->references('id_session')->on('konseling_session')
-                ->onDelete('cascade');
-
-            $table->foreign('id_siswa')
-                ->references('id_siswa')->on('siswa')
-                ->onDelete('cascade');
         });
-
     }
 
     /**

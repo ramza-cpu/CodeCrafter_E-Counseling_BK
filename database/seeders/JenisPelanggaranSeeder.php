@@ -7,14 +7,25 @@ use Illuminate\Support\Facades\DB;
 
 class JenisPelanggaranSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('jenis_pelanggaran')->insert([
-            ['id_jenis_pelanggaran' => 1, 'nama_pelanggaran' => 'Terlambat', 'poin' => 5],
-            ['id_jenis_pelanggaran' => 2, 'nama_pelanggaran' => 'Tidak memakai atribut', 'poin' => 10],
-        ]);
+        $pelanggaranList = [
+            'Terlambat masuk sekolah',
+            'Tidak memakai atribut lengkap',
+            'Membolos pelajaran',
+            'Rambut tidak sesuai aturan',
+            'Tidak mengerjakan tugas',
+            'Berisik di kelas',
+            'Menggunakan HP saat pelajaran',
+        ];
+
+        for ($i = 0; $i < 15; $i++) {
+            DB::table('jenis_pelanggaran')->insert([
+                'nama_pelanggaran' => $pelanggaranList[$i % count($pelanggaranList)],
+                'poin' => rand(5, 20),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

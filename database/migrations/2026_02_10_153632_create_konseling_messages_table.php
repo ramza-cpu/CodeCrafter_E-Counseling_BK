@@ -12,19 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('konseling_message', function (Blueprint $table) {
-            $table->bigIncrements('id_message');
-            $table->unsignedBigInteger('id_session');
+            $table->id('id_message');
+
+            $table->foreignId('id_session')
+                ->constrained('konseling_session', 'id_session')
+                ->cascadeOnDelete();
 
             $table->enum('sender', ['siswa', 'guru']);
             $table->text('message');
 
             $table->timestamps();
-
-            $table->foreign('id_session')
-                ->references('id_session')->on('konseling_session')
-                ->onDelete('cascade');
         });
-
     }
 
     /**

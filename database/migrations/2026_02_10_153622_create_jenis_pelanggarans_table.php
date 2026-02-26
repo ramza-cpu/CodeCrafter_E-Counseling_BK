@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('jenis_pelanggaran', function (Blueprint $table) {
-    $table->bigIncrements('id_jenis_pelanggaran');
-    $table->string('nama_pelanggaran', 50);
-    $table->integer('poin');
-    $table->timestamps();
-});
-
+        Schema::create('jenis_pelanggaran', function (Blueprint $table) {
+            $table->id('id_jenis_pelanggaran');
+            $table->string('nama_pelanggaran', 50);
+            $table->integer('poin');
+            $table->timestamps();
+        });
     }
 
     /**

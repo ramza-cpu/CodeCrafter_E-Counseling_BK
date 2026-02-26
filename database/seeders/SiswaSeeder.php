@@ -2,30 +2,29 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // ✅ penting
 
 class SiswaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('siswa')->insert([
-            [
-                'id_siswa' => 1,
-                'id_guru' => 1,
-                'id_user' => 3,
-                'nisn' => '1234567890',
-                'nama' => 'Andi Saputra',
-                'kelas' => 'XII RPL 1',
-                'jenis_kelamin' => 'L',
-                'alamat' => 'Jl. Merdeka No.1',
-                'no_hp' => '081298765432',
-                'skor' => 95,
-                'qr_code' => null,
-            ],
-        ]);
+        $faker = Faker::create('id_ID');
+
+        for ($i = 1; $i <= 15; $i++) {
+            DB::table('siswa')->insert([
+                'id_user' => $i,
+                'nisn' => $faker->unique()->numerify('##########'),
+                'nama' => $faker->name(),
+                'kelas' => 'X-'.$faker->randomElement(['A', 'B', 'C']),
+                'jenis_kelamin' => $faker->randomElement(['L', 'P']),
+                'alamat' => $faker->address(),
+                'no_hp' => '08'.$faker->numerify('##########'),
+                'skor' => 100, // awal 100
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

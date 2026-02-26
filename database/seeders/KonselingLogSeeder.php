@@ -5,15 +5,14 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KonselingSessionSeeder extends Seeder
+class KonselingLogSeeder extends Seeder
 {
     public function run()
     {
         for ($i = 1; $i <= 15; $i++) {
-            DB::table('konseling_session')->insert([
-                'anonymous_code' => 'ANON'.$i,
-                'nickname' => 'Siswa'.$i,
-                'status' => rand(0, 1) ? 'aktif' : 'selesai',
+            DB::table('konseling_log')->insert([
+                'id_session' => rand(1, 15),
+                'id_siswa' => rand(1, 15),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

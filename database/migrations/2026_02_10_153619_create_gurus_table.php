@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('guru', function (Blueprint $table) {
-            $table->bigIncrements('id_guru');
-            $table->unsignedBigInteger('user_id');
+            $table->id('id_guru');
+
+            $table->foreignId('id_user')
+                ->constrained('users', 'id_user')
+                ->cascadeOnDelete();
 
             $table->string('nip', 18)->unique();
             $table->string('nama', 32);
@@ -22,12 +25,7 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['L', 'P']);
 
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id_user')->on('users')
-                ->onDelete('cascade');
         });
-
     }
 
     /**
