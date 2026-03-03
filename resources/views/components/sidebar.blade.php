@@ -1,5 +1,3 @@
-
-
 <aside class="sidebar" id="sidebar">
 
     <div class="sidebar-top">
@@ -11,76 +9,89 @@
 
     <ul class="menu">
 
-        {{-- DASHBOARD (Semua Role) --}}
+        {{-- DASHBOARD --}}
+        @auth
         <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}">🏠 Dashboard</a>
         </li>
+        @endauth
+
 
         {{-- ================= ADMIN ================= --}}
-         @if(session('role') == 'admin')
+        @auth
+        @if(Auth::user()->role == 'admin')
 
-            <li class="{{ request()->routeIs('pesan.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('pesan') ? 'active' : '' }}">
                 <a href="{{ route('pesan') }}">💬 Pesan</a>
             </li>
 
-            <li class="{{ request()->routeIs('akumulasi.*') ? 'active' : '' }}">
-                <a href="{{ route('akumulasi') }}">⭐ Akumulasi</a>
-            </li>
-
-            <li class="{{ request()->routeIs('scan.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('scan') ? 'active' : '' }}">
                 <a href="{{ route('scan') }}">📷 Scan QR</a>
             </li>
 
-            <li class="{{ request()->routeIs('cetak.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('akumulasi.create') ? 'active' : '' }}">
+                <a href="#">⭐ Akumulasi</a>
+            </li>
+
+            <li class="{{ request()->routeIs('cetak') ? 'active' : '' }}">
                 <a href="{{ route('cetak') }}">🖨 Cetak</a>
             </li>
 
-            <li class="{{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">
                 <a href="{{ route('riwayat') }}">🕒 Riwayat</a>
             </li>
 
         @endif
+        @endauth
 
 
-        {{-- ================= MURID ================= --}}
-          @if(session('role') == 'murid')
+        {{-- ================= SISWA ================= --}}
+        @auth
+        @if(Auth::user()->role == 'siswa')
 
-            <li class="{{ request()->routeIs('pesan.*') ? 'active' : '' }}">
-                <a href="{{ route('pesan') }}">💬 Pesan</a>
+            <li class="{{ request()->routeIs('siswa.chat') ? 'active' : '' }}">
+                <a href="{{ route('siswa.chat') }}">💬 Pesan</a>
             </li>
 
-            <li class="{{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">
                 <a href="{{ route('riwayat') }}">🕒 Riwayat</a>
             </li>
 
         @endif
+        @endauth
 
 
         {{-- ================= GURU ================= --}}
-  @if(session('role') == 'guru')
+        @auth
+        @if(Auth::user()->role == 'guru')
 
-            <li class="{{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
+            <li class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">
                 <a href="{{ route('riwayat') }}">🕒 Riwayat</a>
             </li>
 
         @endif
+        @endauth
 
 
         {{-- ================= ORANG TUA ================= --}}
-        @if(session('role') == 'orang_tua')
+        @auth
+        @if(Auth::user()->role == 'ortu')
 
-            <li class="{{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
-                <a href="{{ route('riwayat') }}">🕒 Riwayat</a>
+            <li class="{{ request()->routeIs('ortu.riwayat') ? 'active' : '' }}">
+                <a href="{{ route('ortu.riwayat') }}">🕒 Riwayat</a>
             </li>
 
         @endif
+        @endauth
 
     </ul>
 
+    @auth
     <form action="{{ route('logout') }}" method="POST">
         @csrf
         <button class="logout">Keluar</button>
     </form>
+    @endauth
 
 </aside>
 
