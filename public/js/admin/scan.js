@@ -100,104 +100,147 @@ if (logoutBtn) {
   });
 }
 
-// ==========================
-// QR SCANNER
-// ==========================
-let html5QrCode;
+// ===============================
+// SMART E-COUNSEL SCAN JS
+// ===============================
 
-// Dummy database murid
-const students = {
-  1234567890: {
-    nama: "Budi Santoso",
-    kelas: "X IPA 1",
-    jurusan: "IPA",
-  },
-  9876543210: {
-    nama: "Siti Aminah",
-    kelas: "XI IPS 2",
-    jurusan: "IPS",
-  },
-};
+// Global scanner
+let html5QrCode = null;
+let scannerRunning = false;
 
-function tampilkanData(kode) {
-  const resultDiv = document.getElementById("result");
-  
-  if (students[kode]) {
-    const s = students[kode];
-    resultDiv.innerHTML = `
-      <div class="student-data">
-        <p><strong>Nama:</strong> ${s.nama}</p>
-        <p><strong>Kelas:</strong> ${s.kelas}</p>
-        <p><strong>Jurusan:</strong> ${s.jurusan}</p>
-        <p><strong>NISN:</strong> ${kode}</p>
-      </div>
-    `;
-    resultDiv.style.color = "inherit";
-  } else {
-    resultDiv.innerHTML = `
-      <p class="error-message">❌ Data tidak ditemukan untuk kode: <strong>${kode}</strong></p>
-    `;
-  }
-}
-
+// ===============================
+// START CAMERA
+// ===============================
 function startScanner() {
-  const readerDiv = document.getElementById("reader");
-  
-  // Jika scanner sudah aktif, stop dulu
-  if (html5QrCode && html5QrCode.isScanning) {
-    html5QrCode.stop().then(() => {
-      readerDiv.innerHTML = "";
-      initScanner();
-    });
-  } else {
-    initScanner();
-  }
-}
 
-function initScanner() {  
-  html5QrCode = new Html5Qrcode("reader");
+    if (scannerRunning) {
+        return;
+    }
 
-  Html5Qrcode.getCameras()
-    .then((devices) => {
-      if (devices.length) {
-        html5QrCode.start(
-          devices[0].id,
-          { fps: 10, qrbox: { width: 250, height: 250 } },
-          (qrMessage) => {
-            tampilkanData(qrMessage);
-            html5QrCode.stop();
-          },
-          (errorMessage) => {
-            // Ignore scan errors (normal saat lagi scan)
-          }
-        ).catch((err) => {
-          alert("Gagal memulai kamera: " + err);
+    html5QrCode = new Html5Qrcode("reader");
+
+    Html5Qrcode.getCameras()
+        .then(devices => {
+
+            if (devices && devices.length > 0) {
+
+                // Pilih kamera belakang jika ada
+                let cameraId = devices[0].id;
+
+                devices.forEach(device => {
+                    if (device.label.toLowerCase().includes("back")) {
+                        cameraId = device.id;
+                    }
+                });
+
+                html5QrCode.start(
+                    cameraId,
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    onScanSuccess,
+                    onScanFailure
+                );
+
+                scannerRunning = true;
+
+            } else {
+                alert("Kamera tidak ditemukan");
+            }
+        })
+        .catch(err => {
+            console.error("Error akses kamera:", err);
+            alert("Gagal mengakses kamera");
         });
-      } else {
-        alert("Tidak ada kamera yang terdeteksi!");
-      }
-    })
-    .catch(() => {
-      alert("Kamera tidak bisa diakses! Pastikan izin kamera sudah diberikan.");
-    });
 }
 
+// ===============================
+// SCAN BERHASIL
+// ===============================
+function onScanSuccess(decodedText) {
+
+    if (!decodedText) return;
+
+    stopScanner();
+
+    // Isi hidden input
+    const hiddenInput = document.getElementById("nisnHidden");
+    if (hiddenInput) {
+        hiddenInput.value = decodedText;
+    }
+
+    // Submit form
+    const form = document.getElementById("scanForm");
+    if (form) {
+        form.submit();
+    }
+}
+
+// ===============================
+// SCAN GAGAL (DIABAIKAN)
+// ===============================
+function onScanFailure(error) {
+    // Tidak perlu tampilkan error scan terus-menerus
+    // console.warn(error);
+}
+
+// ===============================
+// STOP CAMERA
+// ===============================
+function stopScanner() {
+    if (html5QrCode && scannerRunning) {
+        html5QrCode.stop()
+            .then(() => {
+                scannerRunning = false;
+            })
+            .catch(err => {
+                console.error("Gagal stop scanner:", err);
+            });
+    }
+}
+
+// ===============================
+// MANUAL INPUT
+// ===============================
 function manualScan() {
-  const input = document.getElementById("manualInput");
-  const value = input.value.trim();
-  
-  if (value === "") {
-    alert("Silakan masukkan NISN atau kode QR!");
-    return;
-  }
-  
-  tampilkanData(value);
-  input.value = ""; // Clear input setelah scan
+
+    const manualInput = document.getElementById("manualInput");
+
+    if (!manualInput) return;
+
+    const value = manualInput.value.trim();
+
+    if (value === "") {
+        alert("Masukkan NISN terlebih dahulu!");
+        return;
+    }
+
+    const hiddenInput = document.getElementById("nisnHidden");
+    if (hiddenInput) {
+        hiddenInput.value = value;
+    }
+
+    const form = document.getElementById("scanForm");
+    if (form) {
+        form.submit();
+    }
 }
 
-// Allow Enter key untuk manual scan
-document.getElementById("manualInput")?.addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    manualScan();
-  }
+// ===============================
+// AUTO ENTER UNTUK INPUT MANUAL
+// ===============================
+document.addEventListener("DOMContentLoaded", function () {
+
+    const manualInput = document.getElementById("manualInput");
+
+    if (manualInput) {
+        manualInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                manualScan();
+            }
+        });
+    }
+
 });

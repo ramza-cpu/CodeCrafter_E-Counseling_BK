@@ -1,0 +1,48 @@
+.scan-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.scan-card {
+    background: #fff;
+    padding: 20px;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.scan-card h3 {
+    margin-bottom: 10px;
+}
+
+.scan-card label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.scan-card input,
+.scan-card select,
+.scan-card textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.btn-primary {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #2d6cdf;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #1f4fa5;
+}

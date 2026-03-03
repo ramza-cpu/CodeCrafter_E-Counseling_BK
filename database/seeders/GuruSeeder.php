@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB; // ✅ penting
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class GuruSeeder extends Seeder
 {
@@ -17,9 +17,8 @@ class GuruSeeder extends Seeder
                 'id_user' => $i,
                 'nip' => $faker->unique()->numerify('##################'),
                 'nama' => $faker->name(),
-                'email' => $faker->unique()->safeEmail(),
-                'no_hp' => '08'.$faker->numerify('##########'),
-                'jenis_kelamin' => $faker->randomElement(['L', 'P']),
+                'no_hp' => '08' . $faker->numerify('##########'),
+                'jenis_kelamin' => $faker->randomElement(['L','P']),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
