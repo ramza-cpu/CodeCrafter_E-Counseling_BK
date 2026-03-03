@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -20,6 +21,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        // cari user
         $user = User::where('username', $request->username)->first();
 
         if (! $user) {
@@ -30,37 +32,39 @@ class AuthController extends Controller
             return back()->with('error', 'Password salah');
         }
 
-        // simpan session
-        session([
-            'user_id' => $user->id_user,
-            'username' => $user->username,
-            'role' => $user->role,
-        ]);
+        // ✅ LOGIN MENGGUNAKAN AUTH LARAVEL
+        Auth::login($user);
 
-        // redirect berdasarkan role
-        if ($user->role == 'admin') {
-            return redirect('/admin');
-        }
+        // regenerate session biar aman
+        $request->session()->regenerate();
 
-        if ($user->role == 'guru') {
-            return redirect('/guru');
-        }
+        // redirect sesuai role
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('dashboard');
 
-        if ($user->role == 'siswa') {
-            return redirect('/siswa');
-        }
+            case 'guru':
+                return redirect()->route('guru.dashboard');
 
-        if ($user->role == 'ortu') {
-            return redirect('/ortu');
+            case 'siswa':
+                return redirect()->route('siswa.dashboard');
+
+            case 'ortu':
+                return redirect()->route('ortu.dashboard');
+
+            default:
+                Auth::logout();
+                return redirect('/login')->with('error', 'Role tidak valid');
         }
     }
 
-public function logout(Request $request)
-{
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+    public function logout(Request $request)
+    {
+        Auth::logout();
 
-    return redirect('/login');
-}
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
+        return redirect('/login');
+    }
 }
