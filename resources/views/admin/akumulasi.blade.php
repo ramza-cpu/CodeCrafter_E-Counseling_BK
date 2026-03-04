@@ -9,9 +9,12 @@
 @section('content')
 
 <div class="mobile-topbar">
-    <button class="mobile-hamburger" type="button">☰</button>
+    <button class="mobile-hamburger" id="mobileHamburger" type="button">
+        ☰
+    </button>
     <h2 class="mobile-logo">Smart E-Counsel</h2>
 </div>
+
 
 <section class="main-content">
     <h1>Input Pelanggaran</h1>
