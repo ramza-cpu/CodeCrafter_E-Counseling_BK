@@ -48,6 +48,7 @@
                         <td>Pelanggaran {{ $i }}</td>
                         <td>{{ rand(1,20) }}</td>
                         <td>{{ date('d-m-Y') }}</td>
+                        <td><button>Print</button></td>
                     </tr>
                     @endfor
                 </tbody>
