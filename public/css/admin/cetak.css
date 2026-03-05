@@ -33,7 +33,7 @@
     background: #ffffff;
     padding: 25px 30px;
     border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 6px 20px rgba(145, 118, 118, 0.06);
     overflow-x: auto;
 }
 
@@ -46,6 +46,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .print-table thead {

@@ -1,167 +1,245 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    height: 100vh;
-    overflow: hidden;
-    background: #f5f5f5;
+  height: 100vh;
+  overflow: hidden;
 }
 
+/* =========================
+   BACKGROUND IMAGE
+========================= */
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.8);
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0,120,200,0.6),
+    rgba(180,230,255,0.4)
+  );
+  backdrop-filter: blur(3px);
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
 .container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 8%;
+  display: flex;
+  height: 100vh;
 }
 
-/* Background Shape Biru */
-.background-shape {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 45%;
-    height: 100%;
-    background: #b4cce8;
-    border-radius: 50% 0 0 50%;
-    z-index: 0;
+/* =========================
+   LEFT SIDE (GURU)
+========================= */
+.left-side {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Login Box */
+.guru-img {
+  width: 80%;
+  max-width: 350px;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+}
+
+/* =========================
+   RIGHT SIDE (LOGIN)
+========================= */
+.right-side {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .login-box {
-    position: relative;
-    z-index: 2;
-    max-width: 400px;
-    width: 100%;
+  width: 400px;
+  padding: 50px 40px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 30px 60px rgba(0,150,255,0.3);
 }
 
-.login-box h1 {
-    font-size: 2.5rem;
-    font-weight: 900;
-    margin-bottom: 2rem;
-    color: #1a1a1a;
-    white-space: nowrap;
+.login-box h2 {
+  color: white;
+  margin-bottom: 10px;
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
+.subtitle {
+  color: #eaf8ff;
+  margin-bottom: 30px;
 }
 
-.form-group label {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: #1a1a1a;
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 0.9rem 1.2rem;
-    font-size: 0.95rem;
-    border: 2px solid #1a1a1a;
-    border-radius: 50px;
-    outline: none;
-    transition: border-color 0.3s;
+.input-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.5);
 }
 
-.form-group input::placeholder {
-    color: #999;
-    font-size: 0.9rem;
+.input-group label {
+  position: absolute;
+  left: 15px;
+  top: 14px;
+  transition: 0.3s;
 }
 
-.form-group input:focus {
-    border-color: #555;
-}
-
-.error {
-    display: block;
-    color: #e74c3c;
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    margin-left: 1rem;
-}
-
-.warning {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 2rem;
+.input-group input:focus + label,
+.input-group input:valid + label {
+  top: -8px;
+  font-size: 12px;
+  background: white;
+  padding: 2px 6px;
+  border-radius: 5px;
 }
 
 .btn-login {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: white;
-    background: #1a1a1a;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background 0.3s;
+  width: 100%;
+  padding: 14px;
+  border-radius: 15px;
+  border: none;
+  background: linear-gradient(135deg,#4fc3f7,#0288d1);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .btn-login:hover {
-    background: #333;
+  transform: scale(1.05);
 }
 
-/* Illustration */
-.illustration {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* FLOAT ANIMATION */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
 }
 
-.illustration img {
-    max-width: 400px;
-    height: auto;
-    position: relative;
-    z-index: 1;
+/* =========================
+   RESPONSIVE MOBILE
+========================= */
+@media (max-width: 768px) {
+
+  .container {
+    flex-direction: column;
+  }
+
+  .left-side {
+    height: 40%;
+  }
+
+  .guru-img {
+    width: 180px;
+  }
+
+  .right-side {
+    height: 60%;
+  }
+
+  .login-box {
+    width: 90%;
+  }
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    .container {
-        flex-direction: column;
-        justify-content: center;
-        padding: 2rem;
-    }
-
-    .background-shape {
-        width: 100%;
-        height: 50%;
-        border-radius: 0 0 50% 50%;
-        top: auto;
-        bottom: 0;
-    }
-
-    .illustration {
-        margin-top: 2rem;
-    }
-
-    .illustration img {
-        max-width: 250px;
-    }
-
-    .login-box {
-        max-width: 100%;
-    }
+.birds {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;  /* penting */
+  z-index: 1;            /* di belakang login */
 }
+
+.login-box {
+  position: relative;
+  z-index: 5;
+}
+
+.bird {
+  position: absolute;
+}
+
+/* Burung dekat */
+.bird1 {
+  width: 100px;
+  top: 18%;
+  animation: fly1 25s linear infinite;
+}
+
+/* Burung tengah */
+.bird2 {
+  width: 67px;
+  top: 30%;
+  opacity: 0.7;
+  animation: fly2 35s linear infinite;
+}
+
+/* Burung jauh */
+.bird3 {
+  width: 30px;
+  top: 12%;
+  opacity: 0.5;
+  filter: blur(1px);
+  animation: fly3 45s linear infinite;
+}
+
+@keyframes fly1 {
+  0%   { left: -100px; transform: translateY(0); }
+  50%  { transform: translateY(-15px); }
+  100% { left: 120vw; transform: translateY(0); }
+}
+
+@keyframes fly2 {
+  0%   { left: -200px; transform: translateY(0); }
+  50%  { transform: translateY(10px); }
+  100% { left: 120vw; transform: translateY(0); }
+}
+
+@keyframes fly3 {
+  0%   { left: -250px; transform: translateY(0); }
+  50%  { transform: translateY(-8px); }
+  100% { left: 120vw; transform: translateY(0); }
+}
+
+.bird2 { animation-delay: 5s; }
+.bird3 { animation-delay: 10s; }
 
 @media (max-width: 768px) {
-    .login-box h1 {
-        font-size: 2rem;
-    }
+  .bird {
+    width: 40px;
+  }
 
-    .illustration img {
-        max-width: 200px;
-    }
+  .bird3 {
+    display: none;
+  }
 }
