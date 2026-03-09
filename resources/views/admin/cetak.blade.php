@@ -25,25 +25,25 @@
 
     <div class="print-wrapper">
 
-        <div class="print-card">
-
-            <h3 style="margin-bottom: 20px;">Data Laporan</h3>
-
-<table class="print-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nama Siswa</th>
-            <th>Nomor Surat</th>
-            <th>Jenis Surat</th>
-            <th>Tanggal Cetak</th>
-            <th>Isi Surat</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-
-    <tbody>
+<div class="print-card">
+    <h3>Data Laporan</h3>
+    
+    <!-- Wrapper untuk horizontal scroll -->
+    <div class="table-container">
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Siswa</th>
+                    <th>Nomor Surat</th>
+                    <th>Jenis Surat</th>
+                    <th>Tanggal Cetak</th>
+                    <th>Isi Surat</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
         @for($i = 1; $i <= 35; $i++)
 
         @php
@@ -95,3 +95,6 @@
 
 </section>
 @endsection
+@push('scripts')
+<script src="{{ asset('js/admin/cetak.js') }}"></script>
+@endpush

@@ -1,120 +1,591 @@
-/* ===================================== */
-/* MAIN SECTION CETAK (SAMA POLA DASHBOARD) */
-/* ===================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #dbeafe, #e0f2ff, #f0f9ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =============================================
+   CONTAINER
+   ============================================= */
+.container {
+  width: 1350px;
+  max-width: 95%;
+  height: 94vh;
+  display: flex;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(173, 216, 255, 0.3);
+  position: relative;
+}
+
+/* =============================================
+   SIDEBAR
+   ============================================= */
+.sidebar {
+  width: 230px;
+  background: linear-gradient(180deg, #e0f2ff, #dbeafe);
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 20px;
+  color: #4f8cff;
+}
+
+.hamburger {
+  font-size: 24px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  color: #4f8cff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.hamburger:hover {
+  background: #f0f9ff;
+}
+
+.menu {
+  list-style: none;
+}
+
+.menu li {
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.menu li:hover,
+.menu .active {
+  background: #4f8cff;
+  color: white;
+  transform: translateX(6px);
+  box-shadow: 0 8px 20px rgba(79, 140, 255, 0.4);
+}
+
+.menu a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* LOGOUT */
+.logout {
+  padding: 10px;
+  border: none;
+  background: #f80000;
+  color: white;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.logout:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(255, 0, 0, 0.4);
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Mobile Topbar */
+.mobile-topbar {
+  display: none;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, #e0f2ff, #dbeafe);
+  box-shadow: 0 2px 10px rgba(79, 140, 255, 0.2);
+  margin-bottom: 20px;
+}
+
+.mobile-hamburger {
+  font-size: 24px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  color: #4f8cff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.mobile-hamburger:hover {
+  background: #f0f9ff;
+}
+
+.mobile-logo {
+  font-weight: 600;
+  font-size: 18px;
+  color: #4f8cff;
+  margin: 0;
+}
+
+/* =============================================
+   MAIN CONTENT
+   ============================================= */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.3);
+}
 
 .main-content {
-    /* margin-left: 250px; samakan dengan lebar sidebar */
-    padding: 30px 40px;
-    height: 100vh;
-    background-color: #f4f6f9;
-    box-sizing: border-box;
-    overflow-y: auto;
-    width: 1000px;
+  padding: 30px;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
-/* Judul halaman */
 .main-content h1 {
-    margin-bottom: 25px;
-    font-size: 26px;
-    font-weight: 600;
-    color: #333;
+  font-size: 28px;
+  color: #1a202c;
+  margin-bottom: 20px;
+  font-weight: 700;
 }
 
-
-/* ===================================== */
-/* CARD / CONTAINER CETAK */
-/* ===================================== */
-
-.print-wrapper {
-    width: 100%;
-}
-
-.print-card {
-    background: #ffffff;
-    padding: 25px 30px;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(145, 118, 118, 0.06);
-    overflow-x: auto;
-}
-
-
-/* ===================================== */
-/* TABEL STYLING */
-/* ===================================== */
-
-.print-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-.print-table thead {
-    background-color: #f9fafc;
-}
-
-.print-table th {
-    padding: 14px 12px;
-    text-align: left;
-    font-weight: 600;
-    color: #444;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-.print-table td {
-    padding: 12px;
-    border-bottom: 1px solid #e5e7eb;
-    color: #555;
-}
-
-.print-table tbody tr:hover {
-    background-color: #f4f6f9;
-}
-
-
-/* ===================================== */
-/* BUTTON CETAK */
-/* ===================================== */
-
+/* =============================================
+   BUTTON CETAK
+   ============================================= */
 .btn-print {
-    display: inline-block;
-    margin-bottom: 20px;
-    padding: 10px 18px;
-    border-radius: 8px;
-    background-color: #4f46e5;
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f8cff, #3b7ce0);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
 }
 
 .btn-print:hover {
-    background-color: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.4);
 }
 
+.btn-print:active {
+  transform: translateY(0);
+}
 
-/* ===================================== */
-/* RESPONSIVE */
-/* ===================================== */
+/* =============================================
+   PRINT WRAPPER & CARD
+   ============================================= */
+.print-wrapper {
+  width: 100%;
+}
 
+.print-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.print-card h3 {
+  color: #1a202c;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* =============================================
+   TABLE CONTAINER (untuk horizontal scroll)
+   ============================================= */
+.table-container {
+  overflow-x: auto;
+  margin: 0 -30px;
+  padding: 0 30px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #4f8cff;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #3b7ce0;
+}
+
+/* =============================================
+   TABLE STYLING
+   ============================================= */
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 900px; /* Force horizontal scroll di mobile */
+}
+
+.print-table thead {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2ff);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.print-table th {
+  padding: 16px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #1a202c;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #4f8cff;
+  white-space: nowrap;
+}
+
+.print-table td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
+  vertical-align: middle;
+}
+
+.print-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.print-table tbody tr:hover {
+  background: #f8f9fa;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.print-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =============================================
+   STATUS BADGES
+   ============================================= */
+.status-done,
+.status-pending {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-done {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* =============================================
+   BUTTON IN TABLE
+   ============================================= */
+.print-table .btn-print {
+  padding: 6px 14px;
+  font-size: 12px;
+  margin: 0;
+}
+
+/* =============================================
+   PRINT MEDIA QUERY
+   ============================================= */
+@media print {
+  body {
+    background: white;
+  }
+
+  .sidebar,
+  .sidebar-overlay,
+  .mobile-topbar,
+  .btn-print {
+    display: none !important;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .main {
+    background: white;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .print-card {
+    box-shadow: none;
+    padding: 20px;
+  }
+
+  .print-table {
+    page-break-inside: auto;
+  }
+
+  .print-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  .print-table thead {
+    display: table-header-group;
+  }
+}
+
+/* =============================================
+   RESPONSIVE — TABLET (992px)
+   ============================================= */
 @media (max-width: 992px) {
+  
+  .main-content {
+    padding: 25px 20px;
+  }
 
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
-    }
+  .main-content h1 {
+    font-size: 24px;
+  }
+
+  .print-card {
+    padding: 25px 20px;
+  }
+
+  .table-container {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+  .print-table {
+    font-size: 13px;
+  }
+
+  .print-table th,
+  .print-table td {
+    padding: 12px 10px;
+  }
 
 }
 
-@media (max-width: 576px) {
+/* =============================================
+   RESPONSIVE — MOBILE (768px)
+   ============================================= */
+@media (max-width: 768px) {
 
-    .print-card {
-        padding: 18px;
-    }
+  body {
+    align-items: flex-start;
+    padding: 0;
+  }
 
-    .print-table {
-        font-size: 13px;
-    }
+  .container {
+    flex-direction: column;
+    height: 100vh;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  /* Sidebar: slide dari kiri */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 230px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    border-radius: 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  /* Hamburger TAMPIL di mobile */
+  .hamburger {
+    display: block !important;
+  }
+
+  /* Sidebar overlay */
+  .sidebar-overlay {
+    z-index: 999;
+  }
+
+  /* Mobile topbar TAMPIL */
+  .mobile-topbar {
+    display: flex !important;
+  }
+
+  /* Main content */
+  .main {
+    width: 100%;
+    overflow-y: visible;
+  }
+
+  .main-content {
+    padding: 20px 15px;
+  }
+
+  .main-content h1 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .btn-print {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .print-card {
+    padding: 20px 15px;
+    border-radius: 15px;
+  }
+
+  .print-card h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  /* Table container untuk scroll */
+  .table-container {
+    margin: 0 -15px;
+    padding: 0 15px;
+  }
+
+  .print-table {
+    font-size: 12px;
+  }
+
+  .print-table th {
+    padding: 12px 8px;
+    font-size: 11px;
+  }
+
+  .print-table td {
+    padding: 10px 8px;
+  }
+
+  .status-done,
+  .status-pending {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .print-table .btn-print {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+}
+
+/* =============================================
+   RESPONSIVE — SMALL MOBILE (480px)
+   ============================================= */
+@media (max-width: 480px) {
+  
+  .main-content {
+    padding: 15px 10px;
+  }
+
+  .main-content h1 {
+    font-size: 20px;
+  }
+
+  .print-card {
+    padding: 15px 10px;
+  }
+
+  .print-card h3 {
+    font-size: 16px;
+  }
+
+  .table-container {
+    margin: 0 -10px;
+    padding: 0 10px;
+  }
+
+  .print-table {
+    font-size: 11px;
+  }
+
+  .print-table th,
+  .print-table td {
+    padding: 8px 6px;
+  }
 
 }

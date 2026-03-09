@@ -106,18 +106,19 @@ body {
 .logout {
   padding: 10px;
   border: none;
-  background: #ff8fab;
+  background: #f80000;
   color: white;
   border-radius: 16px;
   cursor: pointer;
   transition: 0.3s;
   font-size: 13px;
   font-weight: 500;
+  width: 100%;
 }
 
 .logout:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(255, 143, 171, 0.4);
+  box-shadow: 0 8px 18px rgba(255, 0, 0, 0.4);
 }
 
 /* Sidebar Overlay (untuk mobile) */

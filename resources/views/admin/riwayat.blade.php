@@ -1,6 +1,6 @@
  @extends('layouts.app')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'Log Siswa')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/admin/riwayat.css') }}">
@@ -75,6 +75,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://unpkg.com/html5-qrcode"></script>
 <script src="{{ asset('js/admin/riwayat.js') }}"></script>
 @endpush
 

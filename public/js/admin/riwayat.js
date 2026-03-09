@@ -28,7 +28,7 @@ const overlay = document.getElementById("sidebarOverlay");
 function openSidebar() {
   sidebar.classList.add("active");
   overlay.classList.add("active");
-  document.body.style.overflow = "hidden"; // Prevent scroll saat sidebar terbuka
+  document.body.style.overflow = "hidden";
 }
 
 // Fungsi untuk menutup sidebar
@@ -73,7 +73,10 @@ const menuItems = document.querySelectorAll(".menu li");
 menuItems.forEach((item) => {
   item.addEventListener("click", () => {
     // Remove active dari semua item
-    document.querySelector(".menu .active")?.classList.remove("active");
+    const activeItem = document.querySelector(".menu .active");
+    if (activeItem) {
+      activeItem.classList.remove("active");
+    }
     // Tambah active ke item yang diklik
     item.classList.add("active");
     
