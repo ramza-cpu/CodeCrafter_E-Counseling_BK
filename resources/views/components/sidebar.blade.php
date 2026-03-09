@@ -1,7 +1,7 @@
 <aside class="sidebar" id="sidebar">
 
     <div class="sidebar-top">
-        <h2 class="logo">Smart E-Counsel</h2>
+        <h2 class="logo">{{ config('app.name') }}</h2>
         <button class="hamburger" id="hamburgerBtn" type="button">
             ☰
         </button>

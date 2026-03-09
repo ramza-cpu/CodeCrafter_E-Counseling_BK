@@ -12,7 +12,7 @@
     <button class="mobile-hamburger" id="mobileHamburger" type="button">
         ☰
     </button>
-    <h2 class="mobile-logo">Smart E-Counsel</h2>
+    <h2 class="mobile-logo">{{ config('app.name') }}</h2>
 </div>
 
 

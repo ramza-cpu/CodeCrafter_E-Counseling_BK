@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'address' => env('COMPANY_ADDRESS', 'Alamat Belum Diatur'),
+    'phone' => env('COMPANY_PHONE', '-'),
 
     /*
     |--------------------------------------------------------------------------
