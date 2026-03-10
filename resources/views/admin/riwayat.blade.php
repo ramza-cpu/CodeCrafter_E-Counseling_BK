@@ -21,56 +21,63 @@
         <h1>Log Aktifitas Murid</h1>
 
         <!-- TOP BAR -->
-        <div class="top-bar">
-          <div class="search-box">
-            <input type="text" placeholder="Cari nama..." />
-          </div>
+<form method="GET" action="{{ route('riwayat') }}">
+<div class="top-bar">
 
-          <div class="card total">
-            <h3>Total Pelanggaran</h3>
-            <p>76</p>
-          </div>
+  <div class="search-box">
+    <input 
+      type="text" 
+      name="search"
+      value="{{ $search }}"
+      placeholder="Cari nama..."
+    />
+  </div>
 
-          <div class="card danger">
-            <h3>Siswa Pembinaan</h3>
-            <p>18</p>
-          </div>
-        </div>
+  <div class="card total">
+    <h3>Total Pelanggaran</h3>
+    <p>{{ $totalPelanggaran }}</p>
+  </div>
+
+  <div class="card danger">
+    <h3>Siswa Pembinaan</h3>
+    <p>{{ $siswaPembinaan }}</p>
+  </div>
+
+</div>
+</form>
 
         <!-- TABLE -->
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>Nama</th>
+                <th>No</th>
+                <th>Nama Siswa</th>
                 <th>Kelas</th>
-                <th>NISN</th>
-                <th>Jurusan</th>
                 <th>Jenis Pelanggaran</th>
-                <th>Status</th>
+                <th>Poin</th>
+                <th>Keterangan</th>
+                <th>tanggal</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Budi Santoso</td>
-                <td>X DKV 5</td>
-                <td>1234567890</td>
-                <td>IPA</td>
-                <td>Terlambat</td>
-                <td><span class="status warning">Pembinaan</span></td>
-              </tr>
-
-              <tr>
-                <td>Siti Aminah</td>
-                <td>XI RPL 7</td>
-                <td>9876543210</td>
-                <td>RPL</td>
-                <td>Tidak memakai atribut</td>
-                <td><span class="status done">Selesai</span></td>
-              </tr>
-            </tbody>
+<tbody>
+@foreach($riwayat as $data)
+<tr>
+    <td>{{ $data->id_pelanggaran }}</td>
+    <td>{{ $data->siswa->nama }}</td>
+    <td>{{ $data->siswa->kelas }}</td>
+    <td>{{ $data->jenisPelanggaran->nama_pelanggaran }}</td>
+    <td>{{ $data->poin }}</td>
+    <td>{{ $data->keterangan }}</td>
+    <td>{{ $data->tanggal }}</td>
+</tr>
+@endforeach
+</tbody>
           </table>
         </div>
+<div class="pagination-custom pagination">
+    {{ $riwayat->links() }}
+</div>
       </section>
 @endsection
 

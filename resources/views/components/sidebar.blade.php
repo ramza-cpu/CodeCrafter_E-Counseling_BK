@@ -92,7 +92,7 @@
         <button class="logout">Keluar</button>
     </form>
     @endauth
-
+<small>(c) {{ date('Y') }} {{ config('app.address') }}</small>
 </aside>
 
 <div class="sidebar-overlay" id="sidebarOverlay"></div>

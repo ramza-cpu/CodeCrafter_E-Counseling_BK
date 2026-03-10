@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ScanController;
 use App\Http\Controllers\AkumulasiController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\ScanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +25,6 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -55,9 +55,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('akumulasi.store');
 
         Route::get('/cetak', fn () => view('admin.cetak'))->name('cetak');
-        Route::get('/riwayat', fn () => view('admin.riwayat'))->name('riwayat');
+        Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +70,6 @@ Route::middleware(['auth'])->group(function () {
         })->name('guru.dashboard');
 
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -89,7 +87,6 @@ Route::middleware(['auth'])->group(function () {
         })->name('siswa.chat');
 
     });
-
 
     /*
     |--------------------------------------------------------------------------
