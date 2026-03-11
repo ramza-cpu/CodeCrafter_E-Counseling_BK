@@ -1,47 +1,22 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Siswa - SMK BKC</title>
-    <link rel="stylesheet" href="{{ asset('css/siswa/dashboard.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
-        </div>
-        
-        <nav class="nav-menu">
-            <a href="#" class="nav-item active">
-                <i class="fas fa-home"></i>
-                <span>Beranda</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-comment"></i>
-                <span>Pesan</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-history"></i>
-                <span>Riwayat</span>
-            </a>
-        </nav>
+@extends('layouts.app')
 
-        <div class="logout-section">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn" title="Keluar">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Keluar</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+@section('title', 'Dashboard Siswa')
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/siswa/dashboard.css') }}">
+@endpush
+
+@section('content')
+
+<div class="mobile-topbar">
+    <button class="mobile-hamburger" id="mobileHamburger" type="button">
+        ☰
+    </button>
+    <h2 class="mobile-logo">{{ config('app.name') }}</h2>
+</div>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <section class="main-content">
         <!-- Header -->
         <header class="header">
             <div class="header-content">
@@ -201,9 +176,10 @@
                 </div>
             </div>
         </div>
-    </main>
+    </section>
+@endsection
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ asset('js/siswa-dashboard.js') }}"></script>
-</body>
-</html>
+@push('scripts')
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="{{ asset('js/siswa/dashboard.js') }}"></script>
+@endpush

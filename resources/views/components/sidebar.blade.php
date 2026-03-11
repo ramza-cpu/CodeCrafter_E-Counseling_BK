@@ -11,16 +11,16 @@
 
         {{-- DASHBOARD --}}
         @auth
-        <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <a href="{{ route('dashboard') }}">🏠 Dashboard</a>
-        </li>
+
         @endauth
 
 
         {{-- ================= ADMIN ================= --}}
         @auth
         @if(Auth::user()->role == 'admin')
-
+        <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}">🏠 Dashboard</a>
+        </li>
             <li class="{{ request()->routeIs('pesan') ? 'active' : '' }}">
                 <a href="{{ route('pesan') }}">💬 Pesan</a>
             </li>
@@ -48,13 +48,16 @@
         {{-- ================= SISWA ================= --}}
         @auth
         @if(Auth::user()->role == 'siswa')
+                <li class="{{ request()->routeIs('siswa.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('siswa.dashboard') }}">🏠 Dashboard</a>
+        </li>
 
-            <li class="{{ request()->routeIs('siswa.chat') ? 'active' : '' }}">
-                <a href="{{ route('siswa.chat') }}">💬 Pesan</a>
+            <li class="{{ request()->routeIs('siswa.pesan') ? 'active' : '' }}">
+                <a href="{{ route('siswa.pesan') }}">💬 Pesan</a>
             </li>
 
-            <li class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">
-                <a href="{{ route('riwayat') }}">🕒 Riwayat</a>
+            <li class="{{ request()->routeIs('siswa.riwayat') ? 'active' : '' }}">
+                <a href="{{ route('siswa.riwayat') }}">🕒 Riwayat</a>
             </li>
 
         @endif

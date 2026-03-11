@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(['role:admin'])->group(function () {
 
-        Route::get('/admin', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('/admin', fn () => view('admin.dashboard'))->name('admin.dashboard');
 
         Route::get('/pesan', fn () => view('admin.pesan'))->name('pesan');
 
@@ -82,10 +82,13 @@ Route::middleware(['auth'])->group(function () {
             return view('siswa.dashboard');
         })->name('siswa.dashboard');
 
-        Route::get('/siswa/chat', function () {
-            return view('siswa.chat');
-        })->name('siswa.chat');
+        Route::get('/siswa/pesan', function () {
+            return view('siswa.pesan');
+        })->name('siswa.pesan');
 
+        Route::get('/siswa/riwayat', function () {
+            return view('siswa.riwayat');
+        })->name('siswa.riwayat');
     });
 
     /*

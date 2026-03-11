@@ -19,7 +19,7 @@ class RiwayatController extends Controller
             });
         }
 
-        $riwayat = $query->orderBy('tanggal', 'desc')->paginate(1)->withQueryString();
+        $riwayat = $query->orderBy('tanggal', 'desc')->paginate(15)->withQueryString();
 
         $totalPelanggaran = Pelanggaran::count();
 
