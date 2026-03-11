@@ -67,9 +67,12 @@
         {{-- ================= GURU ================= --}}
         @auth
         @if(Auth::user()->role == 'guru')
+                <li class="{{ request()->routeIs('guru.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('guru.dashboard') }}">🏠 Dashboard</a>
+        </li>
 
-            <li class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">
-                <a href="{{ route('riwayat') }}">🕒 Riwayat</a>
+            <li class="{{ request()->routeIs('guru.riwayat') ? 'active' : '' }}">
+                <a href="{{ route('guru.riwayat') }}">🕒 Riwayat</a>
             </li>
 
         @endif
@@ -79,6 +82,9 @@
         {{-- ================= ORANG TUA ================= --}}
         @auth
         @if(Auth::user()->role == 'ortu')
+
+                        <li class="{{ request()->routeIs('ortu.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('ortu.dashboard') }}">🏠 Dashboard</a>
 
             <li class="{{ request()->routeIs('ortu.riwayat') ? 'active' : '' }}">
                 <a href="{{ route('ortu.riwayat') }}">🕒 Riwayat</a>

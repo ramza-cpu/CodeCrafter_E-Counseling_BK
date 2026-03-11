@@ -69,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
             return view('guru.dashboard');
         })->name('guru.dashboard');
 
+        Route::get('/guru/riwayat', function () {
+            return view('guru.riwayat');
+        })->name('guru.riwayat');
     });
 
     /*
