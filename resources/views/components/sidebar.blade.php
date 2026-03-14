@@ -25,6 +25,10 @@
                 <a href="{{ route('pesan') }}">💬 Pesan</a>
             </li>
 
+            <li class="{{ request()->routeIs('admin.manajemen') ? 'active' : '' }}">
+                <a href="{{ route('admin.manajemen') }}">👥 Data Siswa</a>
+            </li>
+
             <li class="{{ request()->routeIs('scan') ? 'active' : '' }}">
                 <a href="{{ route('scan') }}">📷 Scan QR</a>
             </li>

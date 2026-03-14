@@ -10,6 +10,17 @@ class Siswa extends Model
 
     protected $primaryKey = 'id_siswa';
 
+    protected $fillable = [
+        'id_user',
+        'nisn',
+        'nama',
+        'kelas',
+        'jenis_kelamin',
+        'alamat',
+        'no_hp',
+        'skor',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');
@@ -33,5 +44,10 @@ class Siswa extends Model
     public function surat()
     {
         return $this->hasMany(Surat::class, 'id_siswa');
+    }
+
+    public function siswa()
+    {
+        return $this->hasOne(Siswa::class, 'id_user');
     }
 }

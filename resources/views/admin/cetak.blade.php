@@ -38,7 +38,7 @@
                     <th>Nomor Surat</th>
                     <th>Jenis Surat</th>
                     <th>Tanggal Cetak</th>
-                    <th>Isi Surat</th>
+                    <th>Jenis Pelanggaran</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>

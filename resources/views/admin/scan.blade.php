@@ -52,6 +52,7 @@
                     <div class="student-data">
                         <p><strong>Nama:</strong> {{ $siswa->nama }}</p>
                         <p><strong>Kelas:</strong> {{ $siswa->kelas }}</p>
+                        <p><strong>NISN:</strong> {{ $siswa->nisn }}</p>
                         <p><strong>Skor:</strong> {{ $siswa->skor }}</p>
 
                         <a href="{{ route('akumulasi.create', $siswa->id_siswa) }}"
