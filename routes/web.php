@@ -63,7 +63,9 @@ Route::middleware(['auth'])->group(function () {
             ->name('akumulasi.store');
 
         Route::get('/cetak', fn () => view('admin.cetak'))->name('cetak');
+        
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
+        Route::put('/riwayat/{id}/selesai', [RiwayatController::class, 'selesai'])->name('riwayat.selesai');
     });
 
     /*

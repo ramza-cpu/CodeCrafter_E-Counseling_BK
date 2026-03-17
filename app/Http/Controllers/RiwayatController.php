@@ -35,4 +35,15 @@ class RiwayatController extends Controller
             'search'
         ));
     }
+
+    public function selesai($id)    
+{
+    $data = Pelanggaran::findOrFail($id);
+
+    $data->update([
+        'status' => 'selesai'
+    ]);
+
+    return redirect()->back()->with('success', 'Status berhasil diubah menjadi selesai');
+}
 }

@@ -17,6 +17,7 @@ class Pelanggaran extends Model
         'tanggal',
         'poin',
         'keterangan',
+        'status',
     ];
 
     public function siswa()

@@ -49,17 +49,20 @@
         <!-- TABLE -->
         <div class="table-container">
           <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Nama Siswa</th>
-                <th>Kelas</th>
-                <th>Jenis Pelanggaran</th>
-                <th>Poin</th>
-                <th>Keterangan</th>
-                <th>tanggal</th>
-              </tr>
-            </thead>
+<thead>
+  <tr>
+    <th>No</th>
+    <th>Nama Siswa</th>
+    <th>Kelas</th>
+    <th>Jenis Pelanggaran</th>
+    <th>Poin</th>
+    <th>Keterangan</th>
+    <th>Tanggal</th>
+    <th>Status</th>
+    <th>Aksi</th>
+  </tr>
+</thead>
+
 <tbody>
 @foreach($riwayat as $data)
 <tr>
@@ -70,6 +73,31 @@
     <td>{{ $data->poin }}</td>
     <td>{{ $data->keterangan }}</td>
     <td>{{ $data->tanggal }}</td>
+
+    <!-- STATUS -->
+    <td>
+        @if($data->status == 'proses')
+            <span class="status status-proses">Proses</span>
+        @else
+            <span class="status status-selesai">Selesai</span>
+        @endif
+    </td>
+
+    <!-- AKSI -->
+    <td>
+        @if($data->status == 'proses')
+            <form action="{{ route('riwayat.selesai', $data->id_pelanggaran) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-selesai">
+                    ✔ Selesai
+                </button>
+            </form>
+        @else
+            <span class="text-muted">Selesai</span>
+        @endif
+    </td>
+
 </tr>
 @endforeach
 </tbody>
@@ -82,8 +110,17 @@
 @endsection
 
 @push('scripts')
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/admin/riwayat.js') }}"></script>
+@if(session('success'))
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil',
+    text: '{{ session('success') }}'
+});
+</script>
+@endif
 @endpush
 
 </body>

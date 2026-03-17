@@ -44,6 +44,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .sidebar-top {
@@ -68,7 +69,6 @@ body {
   padding: 8px 12px;
   border-radius: 8px;
   display: none;
-  /* Hidden di desktop */
   transition: all 0.3s ease;
 }
 
@@ -78,6 +78,7 @@ body {
 
 .menu {
   list-style: none;
+  flex: 1;
 }
 
 .menu li {
@@ -103,7 +104,14 @@ body {
   display: block;
 }
 
-/* LOGOUT */
+.sidebar small {
+  display: block;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+}
+
 .logout {
   padding: 10px;
   border: none;
@@ -122,7 +130,6 @@ body {
   box-shadow: 0 8px 18px rgba(255, 0, 0, 0.4);
 }
 
-/* Sidebar Overlay (untuk mobile) */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -138,7 +145,6 @@ body {
   opacity: 1;
 }
 
-/* Mobile Topbar - hanya tampil di mobile */
 .mobile-topbar {
   display: none;
   align-items: center;
@@ -182,7 +188,7 @@ body {
 
 .main-content {
   padding: 30px;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -204,7 +210,6 @@ body {
   flex-wrap: wrap;
 }
 
-/* SEARCH */
 .search-box {
   flex: 1;
   min-width: 200px;
@@ -226,7 +231,6 @@ body {
   box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
 }
 
-/* CARDS */
 .card {
   background: white;
   padding: 15px 25px;
@@ -275,8 +279,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
-  /* Minimum width untuk horizontal scroll */
+  min-width: 900px;
 }
 
 thead {
@@ -293,7 +296,7 @@ thead th {
 
 th,
 td {
-  padding: 14px 16px;
+  padding: 14px 12px;
   text-align: left;
 }
 
@@ -314,7 +317,9 @@ td {
   color: #4b5563;
 }
 
-/* STATUS */
+/* =============================================
+   STATUS BADGES
+   ============================================= */
 .status {
   padding: 6px 14px;
   border-radius: 20px;
@@ -322,18 +327,96 @@ td {
   font-weight: 600;
   display: inline-block;
   text-align: center;
+  min-width: 80px;
 }
 
-.status.warning {
+.status-proses {
   background: #fef3c7;
   color: #92400e;
+  border: 1px solid #fbbf24;
 }
 
-.status.done {
+.status-selesai {
   background: #d1fae5;
   color: #065f46;
+  border: 1px solid #10b981;
 }
 
+/* =============================================
+   ACTION BUTTON (HANYA UNTUK STATUS PROSES)
+   ============================================= */
+.btn-selesai {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #10b981;
+  color: white;
+}
+
+.btn-selesai:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-selesai:active {
+  transform: translateY(0);
+}
+
+/* Text untuk kolom aksi jika status selesai */
+.text-muted {
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* =============================================
+   PAGINATION
+   ============================================= */
+.pagination-custom {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.pagination-custom nav > div:first-child {
+  display: none;
+}
+
+.pagination {
+  display: flex;
+  gap: 6px;
+  margin-top: 20px;
+  list-style: none;
+}
+
+.pagination li a,
+.pagination li span {
+  padding: 8px 12px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.pagination li a:hover {
+  background: #f2f2f2;
+}
+
+.pagination .active span {
+  background: #2ecc71;
+  color: white;
+  border-color: #2ecc71;
+}
 
 /* =============================================
    RESPONSIVE — TABLET (992px)
@@ -382,12 +465,10 @@ td {
     overflow: visible;
   }
 
-  /* Sidebar: slide dari kiri, di atas container */
   .sidebar {
     position: fixed;
     top: 0;
     left: -250px;
-    /* Hidden by default */
     width: 230px;
     height: 100vh;
     z-index: 1000;
@@ -398,26 +479,20 @@ td {
 
   .sidebar.active {
     left: 0;
-    /* Slide masuk */
   }
 
-  /* Hamburger TAMPIL di mobile */
   .hamburger {
     display: block !important;
   }
 
-  /* Sidebar overlay */
   .sidebar-overlay {
     z-index: 999;
-    /* Di bawah sidebar tapi di atas main */
   }
 
-  /* Mobile topbar TAMPIL */
   .mobile-topbar {
     display: flex !important;
   }
 
-  /* Main content */
   .main {
     width: 100%;
     overflow-y: visible;
@@ -432,7 +507,6 @@ td {
     margin-bottom: 20px;
   }
 
-  /* Top bar jadi vertical */
   .top-bar {
     flex-direction: column;
     align-items: stretch;
@@ -448,29 +522,41 @@ td {
     min-width: auto;
   }
 
-  /* Table responsive */
   .table-container {
     padding: 15px;
     border-radius: 15px;
   }
 
   table {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   th,
   td {
-    padding: 10px 8px;
+    padding: 10px 6px;
   }
 
   thead th {
-    font-size: 11px;
+    font-size: 10px;
   }
 
-  /* Status badge lebih kecil */
   .status {
-    padding: 4px 10px;
-    font-size: 11px;
+    padding: 4px 8px;
+    font-size: 10px;
+    min-width: 60px;
+  }
+
+  .btn-selesai {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .btn-selesai i {
+    font-size: 9px;
+  }
+
+  .text-muted {
+    font-size: 12px;
   }
 
 }
@@ -505,56 +591,27 @@ td {
   }
 
   table {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   th,
   td {
-    padding: 8px 6px;
+    padding: 8px 4px;
   }
 
-}
-/* container pagination */
-.pagination-custom{
-    display:flex;
-    justify-content:center;
-    margin-top:25px;
-    
-}
+  .status {
+    padding: 3px 6px;
+    font-size: 9px;
+    min-width: 50px;
+  }
 
-/* sembunyikan tulisan showing */
-.pagination-custom nav > div:first-child{
-    display:none;
-}
+  .btn-selesai {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
 
-/* rapikan tombol pagination */
-.pagination{
-    display:flex;
-    gap:6px;
-    margin-top: 20px;
-    list-style:none;
-}
+  .text-muted {
+    font-size: 11px;
+  }
 
-/* tombol */
-.pagination li a,
-.pagination li span{
-    padding:8px 12px;
-    margin-top: 10px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    text-decoration:none;
-    color:#333;
-    font-size:14px;
-}
-
-/* hover */
-.pagination li a:hover{
-    background:#f2f2f2;
-}
-
-/* halaman aktif */
-.pagination .active span{
-    background:#2ecc71;
-    color:white;
-    border-color:#2ecc71;
 }
