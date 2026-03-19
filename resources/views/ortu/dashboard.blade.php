@@ -21,7 +21,7 @@
         <header class="header">
             <div class="header-content">
                 <h2 class="logo">LOGO</h2>
-                <h1>Hello, @user!</h1>
+                <h1>Hello, Asep</h1>
                 <p class="subtitle">Selamat datang kembali, semoga harimu produktif ya</p>
             </div>
         </header>

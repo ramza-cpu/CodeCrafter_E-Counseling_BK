@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AkumulasiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\SiswaController;
@@ -44,14 +45,17 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/admin', fn () => view('admin.dashboard'))->name('admin.dashboard');
 
-        Route::get('/pesan', fn () => view('admin.pesan'))->name('pesan');
+        Route::get('/pesan', [ChatController::class, 'index'])->name('admin.pesan');
+        Route::get('/chat/list', [ChatController::class, 'getChatList']); // realtime sidebar
+        Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+        Route::get('/chat/{id}', [ChatController::class, 'getMessages']);
 
         Route::get('/manajemen', [SiswaController::class, 'index'])->name('admin.manajemen');
         Route::post('/manajemen/store', [SiswaController::class, 'store'])->name('manajemen.store');
 
         Route::put('/manajemen/update/{id}', [SiswaController::class, 'update'])->name('manajemen.update');
-        Route::put('/manajemen/update/{id}', [SiswaController::class,'update'])->name('manajemen.update');
-        Route::delete('/manajemen/delete/{id}', [SiswaController::class,'destroy'])->name('manajemen.delete');
+        Route::put('/manajemen/update/{id}', [SiswaController::class, 'update'])->name('manajemen.update');
+        Route::delete('/manajemen/delete/{id}', [SiswaController::class, 'destroy'])->name('manajemen.delete');
 
         Route::get('/scan', [ScanController::class, 'index'])->name('scan');
         Route::post('/scan', [ScanController::class, 'find'])->name('scan.find');
@@ -63,7 +67,6 @@ Route::middleware(['auth'])->group(function () {
             ->name('akumulasi.store');
 
         Route::get('/cetak', fn () => view('admin.cetak'))->name('cetak');
-        
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
         Route::put('/riwayat/{id}/selesai', [RiwayatController::class, 'selesai'])->name('riwayat.selesai');
     });

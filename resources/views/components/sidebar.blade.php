@@ -21,8 +21,8 @@
         <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <a href="{{ route('admin.dashboard') }}">🏠 Dashboard</a>
         </li>
-            <li class="{{ request()->routeIs('pesan') ? 'active' : '' }}">
-                <a href="{{ route('pesan') }}">💬 Pesan</a>
+            <li class="{{ request()->routeIs('admin.pesan') ? 'active' : '' }}">
+                <a href="{{ route('admin.pesan') }}">💬 Pesan</a>
             </li>
 
             <li class="{{ request()->routeIs('admin.manajemen') ? 'active' : '' }}">
