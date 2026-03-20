@@ -37,8 +37,8 @@
                 <a href="#">⭐ Akumulasi</a>
             </li>
 
-            <li class="{{ request()->routeIs('cetak') ? 'active' : '' }}">
-                <a href="{{ route('cetak') }}">🖨 Cetak</a>
+            <li class="{{ request()->routeIs('surat') ? 'active' : '' }}">
+                <a href="{{ route('surat') }}">🖨 Cetak</a>
             </li>
 
             <li class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">

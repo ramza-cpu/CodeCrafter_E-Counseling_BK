@@ -6,6 +6,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\SuratController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,10 +64,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/akumulasi/{id}', [AkumulasiController::class, 'create'])
             ->name('akumulasi.create');
 
-        Route::post('/akumulasi/store', [AkumulasiController::class, 'store'])
-            ->name('akumulasi.store');
+        Route::post('/akumulasi/store', [AkumulasiController::class, 'store'])->name('akumulasi.store');
 
-        Route::get('/cetak', fn () => view('admin.cetak'))->name('cetak');
+        Route::get('/surat', [SuratController::class, 'index'])->name('surat');
+
+        Route::get('/surat/{id}/preview', [SuratController::class, 'preview'])->name('surat.preview');
+
+        Route::post('/surat/{id}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
+
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
         Route::put('/riwayat/{id}/selesai', [RiwayatController::class, 'selesai'])->name('riwayat.selesai');
     });

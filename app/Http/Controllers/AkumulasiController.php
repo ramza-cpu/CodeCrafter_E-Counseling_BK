@@ -2,149 +2,132 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class AkumulasiController extends Controller
+class SuratController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | TAMPILKAN HALAMAN AKUMULASI
+    | LIST DATA SURAT (HALAMAN ADMIN)
     |--------------------------------------------------------------------------
     */
-    public function create($id_siswa)
+    public function index()
     {
-        $siswa = DB::table('siswa')
-            ->where('id_siswa', $id_siswa)
-            ->first();
+        $surat = DB::table('surat')
+            ->join('siswa', 'surat.id_siswa', '=', 'siswa.id_siswa')
+            ->select(
+                'surat.id_surat',
+                'surat.jenis_surat',
+                'surat.status',
+                'surat.tanggal_cetak',
+                'siswa.nama',
+                'siswa.kelas'
+            )
+            ->orderBy('surat.created_at', 'desc')
+            ->get();
 
-        if (!$siswa) {
-            return redirect()->route('scan')
-                ->with('error', 'Data siswa tidak ditemukan');
-        }
-
-        $jenis = DB::table('jenis_pelanggaran')->get();
-
-        return view('admin.akumulasi', compact('siswa', 'jenis'));
+        return view('admin.surat', compact('surat'));
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | SIMPAN DATA PELANGGARAN
+    | PROSES CETAK SURAT
     |--------------------------------------------------------------------------
     */
-    public function store(Request $request)
+    public function cetak($id)
     {
-        $request->validate([
-            'id_siswa' => 'required',
-            'id_jenis_pelanggaran' => 'required',
-            'keterangan' => 'required'
-        ]);
+        // ambil data surat + siswa
+        $surat = DB::table('surat')
+            ->join('siswa', 'surat.id_siswa', '=', 'siswa.id_siswa')
+            ->where('surat.id_surat', $id)
+            ->select(
+                'surat.*',
+                'siswa.nama',
+                'siswa.kelas'
+            )
+            ->first();
 
-        DB::beginTransaction();
+        if (!$surat) {
+            return back()->with('error', 'Data surat tidak ditemukan');
+        }
 
-        try {
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL ID GURU DARI USER LOGIN
+        |--------------------------------------------------------------------------
+        */
+        $guru = DB::table('guru')
+            ->where('id_user', Auth::id())
+            ->first();
 
-            /*
-            |--------------------------------------------------------------
-            | 1️⃣ Ambil id_user yang login
-            |--------------------------------------------------------------
-            */
-            $idUser = Auth::id();
+        if (!$guru) {
+            return back()->with('error', 'Data guru tidak ditemukan');
+        }
 
-            /*
-            |--------------------------------------------------------------
-            | 2️⃣ Cari id_guru berdasarkan id_user
-            |--------------------------------------------------------------
-            */
-            $guru = DB::table('guru')
-                ->where('id_user', $idUser)
-                ->first();
+        /*
+        |--------------------------------------------------------------------------
+        | GENERATE ISI SURAT
+        |--------------------------------------------------------------------------
+        */
+        $isiSurat = $this->generateIsiSurat($surat);
 
-            if (!$guru) {
-                return back()->with('error', 'Guru tidak ditemukan.');
-            }
+        /*
+        |--------------------------------------------------------------------------
+        | GENERATE NOMOR SURAT
+        |--------------------------------------------------------------------------
+        */
+        $nomorSurat = 'SP/' . date('Y') . '/' . str_pad($surat->id_surat, 3, '0', STR_PAD_LEFT);
 
-            /*
-            |--------------------------------------------------------------
-            | 3️⃣ Ambil data siswa
-            |--------------------------------------------------------------
-            */
-            $siswa = DB::table('siswa')
-                ->where('id_siswa', $request->id_siswa)
-                ->first();
-
-            if (!$siswa) {
-                return back()->with('error', 'Siswa tidak ditemukan.');
-            }
-
-            /*
-            |--------------------------------------------------------------
-            | 4️⃣ Ambil jenis pelanggaran
-            |--------------------------------------------------------------
-            */
-            $jenis = DB::table('jenis_pelanggaran')
-                ->where('id_jenis_pelanggaran', $request->id_jenis_pelanggaran)
-                ->first();
-
-            if (!$jenis) {
-                return back()->with('error', 'Jenis pelanggaran tidak ditemukan.');
-            }
-
-            $poin = $jenis->poin;
-
-            /*
-            |--------------------------------------------------------------
-            | 5️⃣ Hitung skor baru (maksimal 100)
-            |--------------------------------------------------------------
-            */
-            $skorBaru = $siswa->skor + $poin;
-
-            if ($skorBaru > 100) {
-                $skorBaru = 100;
-            }
-
-            /*
-            |--------------------------------------------------------------
-            | 6️⃣ Insert ke tabel pelanggaran
-            |--------------------------------------------------------------
-            */
-            
-            DB::table('pelanggaran')->insert([
-                'id_siswa' => $request->id_siswa,
-                'id_jenis_pelanggaran' => $request->id_jenis_pelanggaran,
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE DATA SURAT
+        |--------------------------------------------------------------------------
+        */
+        DB::table('surat')
+            ->where('id_surat', $id)
+            ->update([
                 'id_guru' => $guru->id_guru,
-                'tanggal' => now(),
-                'poin' => $poin,
-                'keterangan' => $request->keterangan,
-                'created_at' => now(),
+                'tanggal_cetak' => now(),
+                'status' => 'dicetak',
+                'isi_surat' => $isiSurat,
+                'nomor_surat' => $nomorSurat,
                 'updated_at' => now()
             ]);
 
-            /*
-            |--------------------------------------------------------------
-            | 7️⃣ Update skor siswa
-            |--------------------------------------------------------------
-            */
-            DB::table('siswa')
-                ->where('id_siswa', $request->id_siswa)
-                ->update([
-                    'skor' => $skorBaru,
-                    'updated_at' => now()
-                ]);
+        return view('admin.cetak', [
+            'surat' => $surat,
+            'isi' => $isiSurat,
+            'nomor' => $nomorSurat,
+            'guru' => $guru
+        ]);
+    }
 
-            DB::commit();
 
-            return redirect()->route('scan')
-                ->with('success', 'Pelanggaran berhasil ditambahkan.');
+    /*
+    |--------------------------------------------------------------------------
+    | GENERATE ISI SURAT OTOMATIS
+    |--------------------------------------------------------------------------
+    */
+    private function generateIsiSurat($surat)
+    {
+        $nama = $surat->nama;
+        $kelas = $surat->kelas;
 
-        } catch (\Exception $e) {
+        switch ($surat->jenis_surat) {
 
-            DB::rollBack();
+            case 'Surat Peringatan 1':
+                return "Diberikan Surat Peringatan Pertama kepada siswa atas nama $nama kelas $kelas karena telah melakukan pelanggaran tata tertib sekolah.";
 
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            case 'Surat Peringatan 2':
+                return "Diberikan Surat Peringatan Kedua kepada siswa atas nama $nama kelas $kelas karena mengulangi pelanggaran dan tidak menunjukkan perbaikan.";
+
+            case 'Surat Pengunduran Diri':
+                return "Siswa atas nama $nama kelas $kelas dinyatakan mengundurkan diri dari sekolah karena telah mencapai batas maksimal pelanggaran.";
+
+            default:
+                return "Tidak ada isi surat.";
         }
     }
 }
