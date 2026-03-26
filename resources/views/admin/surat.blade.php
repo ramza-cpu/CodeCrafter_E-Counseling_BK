@@ -51,7 +51,7 @@
     <td>{{ $item->nomor_surat ?? '-' }}</td>
     <td>{{ $item->jenis_surat }}</td>
     <td>{{ $item->tanggal_cetak ?? '-' }}</td>
-    <td>{{ $item->isi_surat ?? '-' }}</td>
+    <td>{{ $item->jenis_pelanggaran ?? '-' }}</td>
 
     <td>
         

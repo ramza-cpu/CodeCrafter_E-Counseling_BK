@@ -36,14 +36,14 @@ class RiwayatController extends Controller
         ));
     }
 
-    public function selesai($id)    
-{
-    $data = Pelanggaran::findOrFail($id);
+    public function selesai($id)
+    {
+        $data = Pelanggaran::findOrFail($id);
 
-    $data->update([
-        'status' => 'selesai'
-    ]);
+        $data->update([
+            'status' => 'selesai',
+        ]);
 
-    return redirect()->back()->with('success', 'Status berhasil diubah menjadi selesai');
-}
+        return redirect()->back()->with('success', 'Status berhasil diubah menjadi selesai');
+    }
 }

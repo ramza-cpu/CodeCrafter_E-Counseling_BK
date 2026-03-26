@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Preview Surat</title>
+    <title>{{ $surat->nomor_surat ?? '-' }}</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -61,6 +61,7 @@
         .ttd {
             margin-top: 80px;
             text-align: right;
+            margin-right: 50px;
         }
 
         .btn-print {
