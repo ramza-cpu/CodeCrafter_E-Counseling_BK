@@ -20,7 +20,7 @@
       <div class="top-section">
         <div class="welcome">
           <p class="date"></p>
-          <h1>Hello, Admin!</h1>
+         <h1>Hello, <span id="username">-</span>!</h1>
           <p class="sub">Ada beberapa update baru untuk anda</p>
         </div>
 
@@ -29,17 +29,8 @@
             <div class="icon">👥</div>
             <div>
               <span class="label">TOTAL MURID</span>
-              <h2>1,674</h2>
+              <h2 id="totalMurid">-</h2>
               <small>murid SMK BBC</small>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="icon">👩‍🏫</div>
-            <div>
-              <span class="label">SESI KONSELING</span>
-              <h2>132</h2>
-              <small>sesi bulan ini</small>
             </div>
           </div>
 
@@ -47,7 +38,7 @@
             <div class="icon">🏃</div>
             <div>
               <span class="label">BUTUH PERHATIAN</span>
-              <h2>12</h2>
+              <h2 id="butuhPerhatian">-</h2>
               <small>perlu tindak lanjut</small>
             </div>
           </div>
@@ -70,41 +61,27 @@
       <!-- GRID BAWAH -->
       <div class="bottom-widgets">
         <div class="widget-card">
-          <h4>Notifikasi darurat 🚨</h4>
-          <div class="notif-item">
-            <b>Bimo</b>
-            <p>SP3 diterbitkan</p>
-            <span>Feb 02, 2026</span>
-          </div>
-          <div class="notif-item">
-            <b>Wati Sukosih XII RPL 7</b>
-            <p>Mendapat teguran</p>
-            <span>Feb 02, 2026</span>
-          </div>
+             <h4>Notifikasi darurat 🚨</h4>
+<div id="notifDarurat">
+
+</div>
         </div>
 
         <div class="widget-card">
           <h4>Rekap poin</h4>
           <canvas id="donutChart"></canvas>
 
-          <div class="rekap-row"><span>Tertib</span><span>62.5%</span></div>
-          <div class="rekap-row"><span>Pembinaan</span><span>25%</span></div>
-          <div class="rekap-row">
-            <span>Prioritas/SP</span><span>12.5%</span>
-          </div>
+          <div class="rekap-row"><span>Tertib</span><span id="tertib"></span></div>
+          <div class="rekap-row"><span>Pembinaan</span><span id="pembinaan"></span></div>
+          <div class="rekap-row"><span>Prioritas/SP</span><span id="prioritas"></span></div>
         </div>
 
         <div class="widget-card">
           <h4>Tindak lanjut</h4>
-          <ul class="todo-list">
-            <li>Hubungi orang tua - Bimo</li>
-            <li>Follow up SP3</li>
-            <li>Verifikasi 2 laporan</li>
-            <li>Input pelanggaran</li>
-          </ul>
+<ul class="todo-list" id="tindakLanjut">
         </div>
 
-        <div class="widget-card">
+        <!-- <div class="widget-card">
           <h4>Notifikasi pesan 💬</h4>
 
           <div class="message-item">
@@ -124,7 +101,7 @@
               <span>12m</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 @endsection
 

@@ -19,13 +19,13 @@
 
     <h1>Cetak Laporan</h1>
 
-    <button onclick="window.print()" class="btn-print">
+    <!-- <button onclick="window.print()" class="btn-print">
         🖨 Cetak
-    </button>
+    </button> -->
 
     <div class="print-wrapper">
 
-<div class="print-card">
+        <div class="print-card">
     <h3>Data Laporan</h3>
     
     <!-- Wrapper untuk horizontal scroll -->

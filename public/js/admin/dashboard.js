@@ -17,167 +17,258 @@ function updateDate() {
 updateDate();
 
 // ==========================
-// HAMBURGER TOGGLE SIDEBAR (MOBILE)
+// SIDEBAR TOGGLE
 // ==========================
 const hamburger = document.getElementById("hamburgerBtn");
 const mobileHamburger = document.getElementById("mobileHamburger");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
 
-// Fungsi untuk membuka sidebar
 function openSidebar() {
-  sidebar.classList.add("active");
-  overlay.classList.add("active");
-  document.body.style.overflow = "hidden"; // Prevent scroll saat sidebar terbuka
+  sidebar?.classList.add("active");
+  overlay?.classList.add("active");
+  document.body.style.overflow = "hidden";
 }
 
-// Fungsi untuk menutup sidebar
 function closeSidebar() {
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
+  sidebar?.classList.remove("active");
+  overlay?.classList.remove("active");
   document.body.style.overflow = "";
 }
 
-// Event listener untuk hamburger button di sidebar (desktop)
-if (hamburger) {
-  hamburger.addEventListener("click", () => {
-    if (sidebar.classList.contains("active")) {
-      closeSidebar();
-    } else {
-      openSidebar();
-    }
-  });
-}
+hamburger?.addEventListener("click", () => {
+  sidebar.classList.contains("active") ? closeSidebar() : openSidebar();
+});
 
-// Event listener untuk hamburger button di mobile topbar
-if (mobileHamburger) {
-  mobileHamburger.addEventListener("click", () => {
-    if (sidebar.classList.contains("active")) {
-      closeSidebar();
-    } else {
-      openSidebar();
-    }
-  });
-}
+mobileHamburger?.addEventListener("click", () => {
+  sidebar.classList.contains("active") ? closeSidebar() : openSidebar();
+});
 
-// Event listener untuk overlay (klik di luar sidebar = tutup)
-if (overlay) {
-  overlay.addEventListener("click", closeSidebar);
-}
+overlay?.addEventListener("click", closeSidebar);
 
 // ==========================
-// MENU ACTIVE SIDEBAR
+// MENU ACTIVE
 // ==========================
-const menuItems = document.querySelectorAll(".menu li");
-
-menuItems.forEach((item) => {
+document.querySelectorAll(".menu li").forEach((item) => {
   item.addEventListener("click", () => {
-    // Remove active dari semua item
     document.querySelector(".menu .active")?.classList.remove("active");
-    // Tambah active ke item yang diklik
     item.classList.add("active");
-    
-    // Tutup sidebar di mobile setelah klik menu
-    if (window.innerWidth <= 768) {
-      closeSidebar();
-    }
+
+    if (window.innerWidth <= 768) closeSidebar();
   });
 });
 
 // ==========================
-// LOGOUT BUTTON
+// HELPER
 // ==========================
-const logoutBtn = document.querySelector(".logout");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    if (confirm("Apakah anda yakin ingin keluar?")) {
-      alert("Anda berhasil logout!");
-      // window.location.href = "login.html"; // aktifkan kalau ada halaman login
+function persen(val, total) {
+  return total === 0 ? 0 : ((val / total) * 100).toFixed(1);
+}
+
+function formatTanggal(date) {
+  return new Date(date).toLocaleDateString("id-ID");
+}
+
+// ==========================
+// CHART INSTANCE (ANTI DOUBLE)
+// ==========================
+let lineChartInstance = null;
+let barChartInstance = null;
+let donutChartInstance = null;
+
+// ==========================
+// FETCH DASHBOARD
+// ==========================
+async function loadDashboard() {
+  try {
+    const res = await fetch('/admin/dashboard/data');
+    const data = await res.json();
+
+    // ======================
+    // USERNAME
+    // ======================
+    const username = document.getElementById("username");
+    if (username) username.innerText = data.user;
+
+    // ======================
+    // CARD DATA
+    // ======================
+    const totalMurid = document.getElementById("totalMurid");
+    const butuhPerhatian = document.getElementById("butuhPerhatian");
+
+    if (totalMurid) totalMurid.innerText = data.total_murid;
+    if (butuhPerhatian) butuhPerhatian.innerText = data.butuh_perhatian;
+
+    // ======================
+    // LINE CHART (STATISTIK BULANAN)
+    // ======================
+    if (lineChartInstance) lineChartInstance.destroy();
+
+  const namaBulan = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+
+  const bulan = data.statistik_bulanan.map(i => namaBulan[i.bulan - 1]);
+    const total = data.statistik_bulanan.map(i => i.total);
+
+    const lineCtx = document.getElementById("lineChart");
+
+    if (lineCtx) {
+      lineChartInstance = new Chart(lineCtx, {
+        type: "line",
+        data: {
+          labels: bulan,
+          datasets: [{
+            label: "Jumlah Pelanggaran",
+            data: total,
+            borderColor: "#7ea9e1",
+            backgroundColor: "rgba(126,169,225,0.2)",
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: "#7ea9e1",
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
     }
-  });
+
+    // ======================
+    // BAR CHART (TOP 4 KASUS)
+    // ======================
+    if (barChartInstance) barChartInstance.destroy();
+
+    const barCtx = document.getElementById("barChart");
+
+    if (barCtx) {
+      barChartInstance = new Chart(barCtx, {
+        type: "bar",
+        data: {
+          labels: data.kategori_kasus.map(i => i.nama_pelanggaran),
+          datasets: [{
+            label: "Jumlah Kasus",
+            data: data.kategori_kasus.map(i => i.total),
+            backgroundColor: "#7ea9e1",
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    // ======================
+    // DONUT CHART (REKAP POIN)
+    // ======================
+    if (donutChartInstance) donutChartInstance.destroy();
+
+    const donutCtx = document.getElementById("donutChart");
+
+    if (donutCtx) {
+      const totalRekap =
+        data.rekap.tertib +
+        data.rekap.pembinaan +
+        data.rekap.prioritas;
+
+      donutChartInstance = new Chart(donutCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["Tertib", "Pembinaan", "Prioritas/SP"],
+          datasets: [{
+            data: [
+              persen(data.rekap.tertib, totalRekap),
+              persen(data.rekap.pembinaan, totalRekap),
+              persen(data.rekap.prioritas, totalRekap)
+            ],
+            backgroundColor: ["#7ea9e1", "#f4b400", "#ff6b6b"],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+
+    
+    const tertib = document.getElementById("tertib");
+    const pembinaan = document.getElementById("pembinaan");
+    const prioritas = document.getElementById("prioritas");
+
+    if (tertib) tertib.innerText = data.rekap.tertib;
+    if (pembinaan) pembinaan.innerText = data.rekap.pembinaan;
+    if (prioritas) prioritas.innerText = data.rekap.prioritas;
+
+    // ======================
+    // NOTIF DARURAT
+    // ======================
+    const notifContainer = document.getElementById("notifDarurat");
+
+    if (notifContainer) {
+      notifContainer.innerHTML = "";
+
+      if (data.notif_darurat.length === 0) {
+        notifContainer.innerHTML = `<p>Tidak ada notifikasi</p>`;
+      } else {
+        data.notif_darurat.forEach(n => {
+          notifContainer.innerHTML += `
+            <div class="notif-item">
+              <b>${n.nama}</b>
+              <p>${n.jenis_surat}</p>
+              <span>${formatTanggal(n.created_at)}</span>
+              <br>
+              <br>
+            </div>
+          `;
+        });
+      }
+    }
+
+    // ======================
+    // TINDAK LANJUT
+    // ======================
+    const tindak = document.getElementById("tindakLanjut");
+
+    if (tindak) {
+      tindak.innerHTML = "";
+
+      if (data.tindak_lanjut.length === 0) {
+        tindak.innerHTML = `<li>Tidak ada tindak lanjut</li>`;
+      } else {
+        data.tindak_lanjut.forEach(t => {
+          tindak.innerHTML += `
+            <li>${t.nama} - ${t.nama_pelanggaran}</li>
+          `;
+        });
+      }
+    }
+
+  } catch (error) {
+    console.error(error);
+    Swal.fire("Error", "Gagal load dashboard", "error");
+  }
 }
 
 // ==========================
-// CHARTS
+// INIT
 // ==========================
-
-// ================= DONUT =================
-const donutCanvas = document.getElementById("donutChart");
-if (donutCanvas) {
-  new Chart(donutCanvas, {
-    type: "doughnut",
-    data: {
-      labels: ["Tertib", "Pembinaan", "Prioritas/SP"],
-      datasets: [
-        {
-          data: [62.5, 25, 12.5],
-          backgroundColor: ["#7ea9e1", "#f4b400", "#ff6b6b"],
-          borderWidth: 0,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-}
-
-// ================= LINE =================
-const lineCanvas = document.getElementById("lineChart");
-if (lineCanvas) {
-  new Chart(lineCanvas, {
-    type: "line",
-    data: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
-      datasets: [
-        {
-          label: "Jumlah Konseling",
-          data: [12, 19, 10, 15, 8, 20],
-          borderColor: "#7ea9e1",
-          backgroundColor: "rgba(126,169,225,0.2)",
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointBackgroundColor: "#7ea9e1",
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-}
-
-// ================= BAR =================
-const barCanvas = document.getElementById("barChart");
-if (barCanvas) {
-  new Chart(barCanvas, {
-    type: "bar",
-    data: {
-      labels: ["Terlambat", "Bolos", "Konflik", "Pelanggaran"],
-      datasets: [
-        {
-          label: "Jumlah Kasus",
-          data: [10, 7, 14, 9],
-          backgroundColor: "#7ea9e1",
-          borderRadius: 8,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-}
+document.addEventListener("DOMContentLoaded", () => {
+  loadDashboard();
+});

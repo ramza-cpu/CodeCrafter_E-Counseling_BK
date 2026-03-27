@@ -3,6 +3,7 @@
 use App\Http\Controllers\AkumulasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\SiswaController;
@@ -44,33 +45,43 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(['role:admin'])->group(function () {
 
-        Route::get('/admin', fn () => view('admin.dashboard'))->name('admin.dashboard');
+        // DASHBOARD ADMIN
+
+        Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/admin/dashboard/data', [DashboardController::class, 'getData']);
+
+        // PESAN ADMIN
 
         Route::get('/pesan', [ChatController::class, 'index'])->name('admin.pesan');
         Route::get('/chat/list', [ChatController::class, 'getChatList']); // realtime sidebar
         Route::post('/chat/send', [ChatController::class, 'sendMessage']);
         Route::get('/chat/{id}', [ChatController::class, 'getMessages']);
 
+        // MANAJEMEN DATA SISWA
+
         Route::get('/manajemen', [SiswaController::class, 'index'])->name('admin.manajemen');
         Route::post('/manajemen/store', [SiswaController::class, 'store'])->name('manajemen.store');
-
         Route::put('/manajemen/update/{id}', [SiswaController::class, 'update'])->name('manajemen.update');
         Route::put('/manajemen/update/{id}', [SiswaController::class, 'update'])->name('manajemen.update');
         Route::delete('/manajemen/delete/{id}', [SiswaController::class, 'destroy'])->name('manajemen.delete');
 
+        // SCAN DATA SISWA
+
         Route::get('/scan', [ScanController::class, 'index'])->name('scan');
         Route::post('/scan', [ScanController::class, 'find'])->name('scan.find');
 
-        Route::get('/akumulasi/{id}', [AkumulasiController::class, 'create'])
-            ->name('akumulasi.create');
+        // AKUMULASI SKOR SISWA
 
+        Route::get('/akumulasi/{id}', [AkumulasiController::class, 'create'])->name('akumulasi.create');
         Route::post('/akumulasi/store', [AkumulasiController::class, 'store'])->name('akumulasi.store');
 
+        // CETAK SURAT SISWA
+
         Route::get('/surat', [SuratController::class, 'index'])->name('surat');
-
         Route::get('/surat/{id}/preview', [SuratController::class, 'preview'])->name('surat.preview');
-
         Route::post('/surat/{id}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
+
+        // RIWAYAT PELANGGARAN SISWA
 
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
         Route::put('/riwayat/{id}/selesai', [RiwayatController::class, 'selesai'])->name('riwayat.selesai');

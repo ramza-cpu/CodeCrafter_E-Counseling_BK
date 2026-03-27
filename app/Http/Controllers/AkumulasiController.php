@@ -160,26 +160,34 @@ class AkumulasiController extends Controller
     */
     private function generateSuratIfNeeded($id_siswa, $skor)
     {
-        // ambil surat yang sudah ada
-        $existingSurat = DB::table('surat')
-            ->where('id_siswa', $id_siswa)
-            ->pluck('jenis_surat')
-            ->toArray();
-
         // SP1
-        if ($skor >= 40 && ! in_array('Surat Peringatan 1', $existingSurat)) {
+        if ($skor >= 40 && ! $this->suratSudahAda($id_siswa, 'Surat Peringatan 1')) {
             $this->createSurat($id_siswa, 'Surat Peringatan 1');
         }
 
         // SP2
-        if ($skor >= 70 && ! in_array('Surat Peringatan 2', $existingSurat)) {
+        if ($skor >= 70 && ! $this->suratSudahAda($id_siswa, 'Surat Peringatan 2')) {
             $this->createSurat($id_siswa, 'Surat Peringatan 2');
         }
 
         // Pengunduran Diri
-        if ($skor >= 100 && ! in_array('Surat Pengunduran Diri', $existingSurat)) {
+        if ($skor >= 100 && ! $this->suratSudahAda($id_siswa, 'Surat Pengunduran Diri')) {
             $this->createSurat($id_siswa, 'Surat Pengunduran Diri');
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | JIKA SURAT SUDAH DITERIMA SISWA SEBELUMNYA
+    |--------------------------------------------------------------------------
+    */
+
+    private function suratSudahAda($id_siswa, $jenis_surat)
+    {
+        return DB::table('surat')
+            ->where('id_siswa', $id_siswa)
+            ->where('jenis_surat', $jenis_surat)
+            ->exists();
     }
 
     /*
