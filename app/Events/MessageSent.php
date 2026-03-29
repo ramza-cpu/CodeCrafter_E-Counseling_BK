@@ -2,9 +2,9 @@
 
 namespace App\Events;
 
-
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 
 class MessageSent implements ShouldBroadcast
 {
@@ -17,7 +17,7 @@ class MessageSent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel('chat.'.$this->message->id_chat);
+        return new Channel('chat.' . $this->message->id_chat);
     }
 
     public function broadcastAs()

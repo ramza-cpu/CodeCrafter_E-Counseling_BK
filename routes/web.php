@@ -52,10 +52,11 @@ Route::middleware(['auth'])->group(function () {
 
         // PESAN ADMIN
 
-        Route::get('/pesan', [ChatController::class, 'index'])->name('admin.pesan');
-        Route::get('/chat/list', [ChatController::class, 'getChatList']); // realtime sidebar
-        Route::post('/chat/send', [ChatController::class, 'sendMessage']);
-        Route::get('/chat/{id}', [ChatController::class, 'getMessages']);
+        Route::get('/admin/pesan', [ChatController::class, 'index'])->name('admin.pesan');
+
+        Route::get('/admin/chat/list', [ChatController::class, 'getChatList']);
+        Route::post('/admin/chat/send', [ChatController::class, 'sendMessage'])->where('id', '[0-9]+');
+        Route::get('/admin/chat/{id}', [ChatController::class, 'getMessages']);
 
         // MANAJEMEN DATA SISWA
 
@@ -114,9 +115,12 @@ Route::middleware(['auth'])->group(function () {
             return view('siswa.dashboard');
         })->name('siswa.dashboard');
 
-        Route::get('/siswa/pesan', function () {
-            return view('siswa.pesan');
-        })->name('siswa.pesan');
+        // PESAN SISWA
+        Route::get('/siswa/pesan', [ChatController::class, 'indexSiswa'])->name('siswa.pesan');
+
+        Route::get('/siswa/chat/list', [ChatController::class, 'getChatListSiswa']);
+        Route::post('/siswa/chat/send', [ChatController::class, 'sendMessageSiswa']);
+        Route::get('/siswa/chat/{id}', [ChatController::class, 'getMessagesSiswa'])->where('id', '[0-9]+');
 
         Route::get('/siswa/riwayat', function () {
             return view('siswa.riwayat');

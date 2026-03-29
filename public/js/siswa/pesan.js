@@ -1,207 +1,280 @@
 // =====================
 // ELEMENT GLOBAL
 // =====================
-
 const chatRoom = document.querySelector(".chat-room");
 const chatList = document.querySelector(".chat-list");
-// const sidebar = document.querySelector(".sidebar");
 const chatName = document.getElementById("chatName");
-const chatBody = document.getElementById("chatBody");
+const chatBody = document.querySelector(".chat-body");
+const chatInput = document.querySelector(".chat-input input");
+const sendBtn = document.querySelector(".chat-input button");
+const chatListContainer = document.getElementById("chatItems");
 
-
-// =====================
-// OPEN CHAT
-// =====================
-
-function openChat(element, name, message1, message2) {
-
-  if (!chatName || !chatBody) return;
-
-  // Ganti nama
-  chatName.textContent = name;
-
-  // Isi ulang pesan
-  chatBody.innerHTML = `
-    <div class="message right">${message1}</div>
-    <div class="message left">${message2}</div>
-  `;
-
-  // Scroll ke bawah
-  chatBody.scrollTop = chatBody.scrollHeight;
-
-  // Reset active
-  document.querySelectorAll(".chat-item").forEach(item => {
-    item.classList.remove("active");
-  });
-
-  element.classList.add("active");
-
-  // MOBILE MODE
-  if (window.innerWidth <= 768) {
-    if (chatRoom) chatRoom.classList.add("active");
-    if (chatList) chatList.style.display = "none";
-    // if (sidebar) sidebar.classList.remove("active");
-  }
-}
-
+let currentChatId = null;
+// let channel = null;
 
 // =====================
-// BACK BUTTON (MOBILE)
+// SIDEBAR (SAMA ADMIN)
 // =====================
-
-function goBack() {
-  if (window.innerWidth <= 768) {
-    if (chatRoom) chatRoom.classList.remove("active");
-    if (chatList) chatList.style.display = "flex";
-  }
-}
-
-
-// ==========================
-// TANGGAL OTOMATIS
-// ==========================
-function updateDate() {
-  const options = {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  };
-  const today = new Date().toLocaleDateString("id-ID", options);
-  const dateElement = document.querySelector(".date");
-  if (dateElement) {
-    dateElement.innerText = today;
-  }
-}
-updateDate();
-
-// ==========================
-// HAMBURGER TOGGLE SIDEBAR (MOBILE)
-// ==========================
 const hamburger = document.getElementById("hamburgerBtn");
 const mobileHamburger = document.getElementById("mobileHamburger");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
 
-// Fungsi untuk membuka sidebar
 function openSidebar() {
-  sidebar.classList.add("active");
-  overlay.classList.add("active");
+  sidebar?.classList.add("active");
+  overlay?.classList.add("active");
   document.body.style.overflow = "hidden";
 }
 
-// Fungsi untuk menutup sidebar
 function closeSidebar() {
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
+  sidebar?.classList.remove("active");
+  overlay?.classList.remove("active");
   document.body.style.overflow = "";
 }
 
-// Event listener untuk hamburger button di sidebar (desktop)
-if (hamburger) {
-  hamburger.addEventListener("click", () => {
-    if (sidebar.classList.contains("active")) {
-      closeSidebar();
-    } else {
-      openSidebar();
-    }
-  });
-}
-
-// Event listener untuk hamburger button di mobile topbar
-if (mobileHamburger) {
-  mobileHamburger.addEventListener("click", () => {
-    if (sidebar.classList.contains("active")) {
-      closeSidebar();
-    } else {
-      openSidebar();
-    }
-  });
-}
-
-// Event listener untuk overlay (klik di luar sidebar = tutup)
-if (overlay) {
-  overlay.addEventListener("click", closeSidebar);
-}
-
-// ==========================
-// MENU ACTIVE SIDEBAR
-// ==========================
-const menuItems = document.querySelectorAll(".menu li");
-
-menuItems.forEach((item) => {
-  item.addEventListener("click", () => {
-    // Remove active dari semua item
-    const activeItem = document.querySelector(".menu .active");
-    if (activeItem) {
-      activeItem.classList.remove("active");
-    }
-    // Tambah active ke item yang diklik
-    item.classList.add("active");
-    
-    // Tutup sidebar di mobile setelah klik menu
-    if (window.innerWidth <= 768) {
-      closeSidebar();
-    }
-  });
+hamburger?.addEventListener("click", () => {
+  sidebar.classList.contains("active") ? closeSidebar() : openSidebar();
 });
 
-// ==========================
-// LOGOUT BUTTON
-// ==========================
-const logoutBtn = document.querySelector(".logout");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    if (confirm("Apakah anda yakin ingin keluar?")) {
-      alert("Anda berhasil logout!");
-      // window.location.href = "login.html"; // aktifkan kalau ada halaman login
-    }
-  });
+mobileHamburger?.addEventListener("click", () => {
+  sidebar.classList.contains("active") ? closeSidebar() : openSidebar();
+});
+
+overlay?.addEventListener("click", closeSidebar);
+
+// =====================
+// BACK BUTTON (MOBILE)
+// =====================
+function goBack() {
+  if (window.innerWidth <= 768) {
+    chatRoom?.classList.remove("active");
+    chatList?.classList.remove("hidden");
+  }
 }
 
-
 // =====================
-// AUTO FIX SAAT RESIZE
+// RESIZE FIX
 // =====================
-
-window.addEventListener("resize", function () {
+window.addEventListener("resize", () => {
   if (window.innerWidth > 768) {
-    if (chatRoom) chatRoom.classList.remove("active");
-    if (chatList) chatList.style.display = "flex";
+    chatRoom?.classList.remove("active");
+    chatList?.classList.remove("hidden");
   }
 });
 
+// =====================
+// LOAD CHAT LIST (RINGAN)
+// =====================
+async function loadChatList() {
+  try {
+    const res = await fetch('/siswa/chat/list');
+    const data = await res.json();
+
+    if (!chatListContainer) return;
+
+    chatListContainer.innerHTML = '';
+
+    if (data.length === 0) {
+      chatListContainer.innerHTML = `<p style="padding:10px;">Belum ada chat</p>`;
+      return;
+    }
+
+    data.forEach(chat => {
+
+      // 🔥 INISIAL GURU
+      const getInitial = (name) => {
+        if (!name) return '?';
+        const words = name.split(' ');
+        return words.length > 1
+          ? (words[0][0] + words[1][0]).toUpperCase()
+          : words[0][0].toUpperCase();
+      };
+
+      const initial = getInitial(chat.name);
+
+      const item = document.createElement("div");
+      item.classList.add("chat-item");
+      item.innerHTML = `
+        <div class="avatar">${initial}</div>
+        <div class="chat-info">
+          <h4>${chat.name}</h4>
+          <p>${chat.last_message ?? 'Belum ada pesan'}</p>
+        </div>
+      `;
+
+      item.addEventListener("click", () => {
+        openChat(chat.id_chat, chat.name, item);
+      });
+
+      chatListContainer.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error("Error load chat list:", err);
+  }
+}
 
 // =====================
-// KIRIM PESAN
+// OPEN CHAT (MOBILE FIX)
 // =====================
+let channel = null;
 
-document.addEventListener("DOMContentLoaded", function () {
+async function openChat(id, name, el) {
 
-  const input = document.querySelector(".chat-input input");
-  const button = document.querySelector(".chat-input button");
+  currentChatId = id;
 
-  if (!input || !button || !chatBody) return;
+  if (chatName) {
+    chatName.textContent = name;
+  }
 
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
+  // ❌ leave channel lama
+  if (channel && window.Echo) {
+    window.Echo.leave(channel);
+  }
 
-    const newMsg = document.createElement("div");
-    newMsg.className = "message right";
-    newMsg.textContent = text;
+  try {
+    const res = await fetch(`/siswa/chat/${id}`);
+    const data = await res.json();
 
-    chatBody.appendChild(newMsg);
+    chatBody.innerHTML = '';
 
-    // Scroll otomatis
+    data.forEach(msg => {
+      const posisi = msg.sender_role === 'siswa' ? 'right' : 'left';
+
+      chatBody.innerHTML += `
+        <div class="message ${posisi}">
+          ${msg.message}
+        </div>
+      `;
+    });
+
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    input.value = "";
+  } catch (err) {
+    console.error("❌ ERROR LOAD CHAT:", err);
   }
 
-  button.addEventListener("click", sendMessage);
+  // ==========================
+  // REALTIME
+  // ==========================
+  channel = 'chat.' + id;
 
-  input.addEventListener("keydown", function (e) {
+  if (window.Echo) {
+
+    window.Echo.channel(channel)
+      .listen('.message.sent', (e) => {
+
+        if (e.message.id_chat != currentChatId) return;
+
+        // ❗ filter agar tidak double (skip sendiri)
+        if (e.message.sender_role === 'siswa') return;
+
+        chatBody.innerHTML += `
+          <div class="message left">
+            ${e.message.message}
+          </div>
+        `;
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+      });
+
+  } else {
+    console.error("Echo tidak tersedia");
+  }
+}
+
+// =====================
+// SEND MESSAGE (RINGAN)
+// =====================
+async function sendMessage() {
+
+  console.log("📡 DEBUG ECHO:", window.Echo);
+
+const testChannel = 'chat.' + currentChatId;
+
+console.log("📡 JOIN CHANNEL:", testChannel);
+
+window.Echo.channel(testChannel)
+  .subscribed(() => {
+    console.log("✅ SUBSCRIBED:", testChannel);
+  })
+  .listen('.message.sent', (e) => {
+
+    console.log("🔥 REALTIME MASUK:", e);
+
+    alert("REALTIME MASUK!");
+
+    chatBody.innerHTML += `
+      <div class="message left">
+        ${e.message.message}
+      </div>
+    `;
+
+  });
+
+  const text = chatInput.value.trim();
+
+  console.log("📤 SEND SISWA DEBUG:", {
+    text,
+    currentChatId
+  });
+
+  if (!text || !currentChatId) {
+    console.warn("⚠️ kosong / chat belum dipilih");
+    return;
+  }
+
+  try {
+    const res = await fetch('/siswa/chat/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        id_chat: currentChatId,
+        message: text
+      })
+    });
+
+    console.log("📡 STATUS:", res.status);
+
+    const result = await res.json();
+
+    console.log("📥 RESPONSE:", result);
+
+    // ❗ cek response
+    if (!result.success) {
+      console.error("❌ SERVER ERROR:", result);
+      alert(result.error || "Gagal kirim pesan");
+      return;
+    }
+
+    // tampil langsung
+    chatBody.innerHTML += `
+      <div class="message right">
+        ${text}
+      </div>
+    `;
+
+    chatInput.value = '';
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+  } catch (err) {
+    console.error("❌ FETCH ERROR:", err);
+  }
+}
+
+// =====================
+// INIT
+// =====================
+document.addEventListener("DOMContentLoaded", () => {
+
+  loadChatList();
+
+  sendBtn?.addEventListener("click", sendMessage);
+
+  chatInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       sendMessage();

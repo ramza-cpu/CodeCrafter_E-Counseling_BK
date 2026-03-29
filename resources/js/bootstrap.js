@@ -1,15 +1,16 @@
 import axios from 'axios';
 import Echo from 'laravel-echo';
-window.axios = axios;
+import Pusher from 'pusher-js';
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.Pusher = Pusher;
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    key: 'app-key',
+    key: import.meta.env.VITE_REVERB_APP_KEY,
     wsHost: window.location.hostname,
     wsPort: 8080,
     forceTLS: false,
+
 });
 
 /**

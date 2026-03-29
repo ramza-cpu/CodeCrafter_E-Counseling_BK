@@ -139,7 +139,7 @@ function scrollToBottom() {
 // LOAD CHATS
 // ==========================
 function loadChats() {
-  fetch('/chat/list')
+  fetch('/admin/chat/list')
     .then(res => res.json())
     .then(data => {
       let html = '';
@@ -187,106 +187,123 @@ function loadChats() {
 // ==========================
 // OPEN CHAT
 // ==========================
+
 function openChat(id, nama, clickedElement) {
+
+  console.log("📡 DEBUG ECHO:", window.Echo);
+
+const testChannel = 'chat.' + currentChatId;
+
+console.log("📡 JOIN CHANNEL:", testChannel);
+
+window.Echo.channel(testChannel)
+  .subscribed(() => {
+    console.log("✅ SUBSCRIBED:", testChannel);
+  })
+  .listen('.message.sent', (e) => {
+
+    console.log("🔥 REALTIME MASUK:", e);
+
+    alert("REALTIME MASUK!");
+
+    chatBody.innerHTML += `
+      <div class="message left">
+        ${e.message.message}
+      </div>
+    `;
+
+  });
+
   currentChatId = id;
 
-  // Update nama di header
   if (chatName) {
     chatName.textContent = nama || 'Anonim';
   }
 
-  // Stop channel lama
-  if (channel) {
+  // ❌ leave channel lama
+  if (channel && window.Echo) {
     window.Echo.leave(channel);
   }
 
-  // Fetch messages
-  fetch(`/chat/${id}`)
+  // ambil pesan
+  fetch(`/admin/chat/${id}`)
     .then(res => res.json())
     .then(data => {
+
       let html = '';
 
-      if (data && data.length > 0) {
-        data.forEach(msg => {
-          let posisi = msg.sender_role === 'guru' ? 'right' : 'left';
+      data.forEach(msg => {
+        const posisi = msg.sender_role === 'guru' ? 'right' : 'left';
 
-          html += `
-            <div class="message ${posisi}">
-              ${msg.message}
-            </div>
-          `;
-        });
-      }
-
-      const chatBox = document.getElementById('chat-box');
-      if (chatBox) {
-        chatBox.innerHTML = html;
-      }
-
-      scrollToBottom();
-      
-      // Highlight active chat
-      const allChatItems = document.querySelectorAll('.chat-item');
-      allChatItems.forEach(item => {
-        item.classList.remove('active');
+        html += `
+          <div class="message ${posisi}">
+            ${msg.message}
+          </div>
+        `;
       });
-      
-      if (clickedElement) {
-        clickedElement.classList.add('active');
-      }
-      
-      // Show chat room on mobile, hide chat list
-      if (window.innerWidth <= 768) {
-        if (chatRoom) {
-          chatRoom.classList.add('active');
-        }
-        if (chatList) {
-          chatList.classList.add('hidden');
-        }
-      }
-    })
-    .catch(error => {
-      console.error('Error loading messages:', error);
-    });
 
-  // JOIN CHANNEL BARU
-  channel = 'chat.' + id;
-
-  window.Echo.channel(channel)
-    .listen('.message.sent', (e) => {
-      let posisi = e.message.sender_role === 'guru' ? 'right' : 'left';
-
-      let html = `
-        <div class="message ${posisi}">
-          ${e.message.message}
-        </div>
-      `;
-
-      const chatBox = document.getElementById('chat-box');
-      if (chatBox) {
-        chatBox.innerHTML += html;
-      }
-
+      chatBody.innerHTML = html;
       scrollToBottom();
 
-      // Update sidebar
-      loadChats();
-    });
-}
+    })
+    .catch(err => console.error("❌ FETCH ERROR:", err));
 
+  // =========================
+  // REALTIME
+  // =========================
+  setTimeout(() => {
+
+    if (!window.Echo) {
+      console.error("Echo belum siap");
+      return;
+    }
+
+    channel = 'chat.' + id;
+
+    window.Echo.channel(channel)
+      .listen('.message.sent', (e) => {
+
+        console.log("🔥 REALTIME:", e);
+
+        // filter chat
+        if (e.message.id_chat != currentChatId) return;
+
+        // filter supaya tidak double (opsional)
+        if (e.message.sender_role === 'guru') return;
+
+        chatBody.innerHTML += `
+          <div class="message left">
+            ${e.message.message}
+          </div>
+        `;
+
+        scrollToBottom();
+      });
+
+  }, 300);
+}
 // ==========================
 // SEND MESSAGE
 // ==========================
 function sendMessage() {
+
   const input = document.getElementById('message-input');
-  
+
   if (!input) return;
-  
+
   const message = input.value.trim();
 
-  if (!message || !currentChatId) return;
+  console.log("📤 SEND ADMIN DEBUG:", {
+    message,
+    currentChatId
+  });
 
-  fetch('/chat/send', {
+  if (!message || !currentChatId) {
+    console.warn("⚠️ kosong / chat belum dipilih");
+    return;
+  }
+
+  fetch('/admin/chat/send', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -297,29 +314,33 @@ function sendMessage() {
       message: message
     })
   })
-  .then(res => res.json())
   .then(res => {
-    // Tampilkan langsung
-    let html = `
+    console.log("📡 STATUS:", res.status);
+    return res.json();
+  })
+  .then(res => {
+
+    console.log("📥 RESPONSE:", res);
+
+    if (!res.success) {
+      console.error("❌ SERVER ERROR:", res);
+      alert(res.error || "Gagal kirim pesan");
+      return;
+    }
+
+    // tampil langsung
+    chatBody.innerHTML += `
       <div class="message right">
-        ${message}
+        ${res.message.message}
       </div>
     `;
 
-    const chatBox = document.getElementById('chat-box');
-    if (chatBox) {
-      chatBox.innerHTML += html;
-    }
-
     input.value = '';
+    chatBody.scrollTop = chatBody.scrollHeight;
 
-    scrollToBottom();
-
-    loadChats();
   })
-  .catch(error => {
-    console.error('Error sending message:', error);
-    alert('Gagal mengirim pesan');
+  .catch(err => {
+    console.error("❌ FETCH ERROR:", err);
   });
 }
 
