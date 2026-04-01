@@ -60,33 +60,17 @@
               </tr>
             </thead>
 <tbody>
+@foreach($riwayat as $data)
 <tr>
-    <td>21</td>
-    <td>Betania Agustina</td>
-    <td>X-C</td>
-    <td>Membolos pelajaran</td>
-    <td>20</td>
-    <td>tidak masuk kelas pada jam pelajaran</td>
-    <td>2026-03-10 16:00:24</td>
-</tr>
-<tr>
-    <td>20</td>
-    <td>Ina Aryani</td>
-    <td>X-A</td>
-    <td>Terlambat masuk sekolah</td>
-    <td>17</td>
-    <td>datang ke sekolah pada pukul 07:15</td>
-    <td>2026-03-10 15:59:32</td>
-</tr>
-<tr>
-    <td>19</td>
-    <td>Yono Suryono</td>
-    <td>X-C</td>
-    <td>Tidak memakai atribut lengkap</td>
-    <td>16</td>
-    <td>tidak memakai bet jurusan</td>
-    <td>2026-03-10 15:58:28</td>
-</tr>
+    <td>{{ $data->id_pelanggaran }}</td>
+    <td>{{ $data->siswa->nama }}</td>
+    <td>{{ $data->siswa->kelas }}</td>
+    <td>{{ $data->jenisPelanggaran->nama_pelanggaran }}</td>
+    <td>{{ $data->poin }}</td>
+    <td>{{ $data->keterangan }}</td>
+    <td>{{ $data->tanggal }}</td>
+
+    @endforeach
 </tbody>
           </table>
         </div>

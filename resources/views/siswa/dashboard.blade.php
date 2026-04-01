@@ -91,39 +91,11 @@
                 </div>
 
                 <!-- Chat Section -->
-                <div class="card chat-card">
-                    <div class="chat-item">
-                        <div class="chat-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="chat-content">
-                            <p class="chat-name">Bu Widia</p>
-                            <p class="chat-message">selamat siang ibu, saya mau mencurahankan is..</p>
-                        </div>
-                        <div class="chat-info">
-                            <span class="chat-time">16:07</span>
-                            <span class="chat-badge">1</span>
-                        </div>
-                    </div>
 
-                    <div class="chat-item">
-                        <div class="chat-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="chat-content">
-                            <p class="chat-name">Bu Eli</p>
-                            <p class="chat-message">selamat siang ibu, saya mau mencurahankan is..</p>
-                        </div>
-                        <div class="chat-info">
-                            <span class="chat-time">16:07</span>
-                            <span class="chat-badge">1</span>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
-            <!-- Right Column -->
-            <div class="right-column">
+
                 <!-- Points Card -->
                 <div class="card points-card">
                     <div class="points-header">
@@ -174,7 +146,7 @@
                     </div>
                     <canvas id="moodChart"></canvas>
                 </div>
-            </div>
+
         </div>
     </section>
 @endsection

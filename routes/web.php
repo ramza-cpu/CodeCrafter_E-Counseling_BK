@@ -99,9 +99,9 @@ Route::middleware(['auth'])->group(function () {
             return view('guru.dashboard');
         })->name('guru.dashboard');
 
-        Route::get('/guru/riwayat', function () {
-            return view('guru.riwayat');
-        })->name('guru.riwayat');
+        Route::get('/guru/riwayat', [RiwayatController::class, 'riwayatGuru'])
+            ->name('guru.riwayat');
+
     });
 
     /*
@@ -136,9 +136,7 @@ Route::middleware(['auth'])->group(function () {
             return view('ortu.dashboard');
         })->name('ortu.dashboard');
 
-        Route::get('/ortu/riwayat', function () {
-            return view('ortu.riwayat');
-        })->name('ortu.riwayat');
+        Route::get('/ortu/riwayat', [RiwayatController::class, 'riwayatOrangTua'])->name('ortu.riwayat');
 
     });
 

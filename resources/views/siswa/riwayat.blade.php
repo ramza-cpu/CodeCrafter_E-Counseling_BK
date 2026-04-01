@@ -29,7 +29,7 @@
     <p>{{ $totalPelanggaran }}</p>
   </div>
 
-  <div class="card total">
+  <div class="card danger">
     <h3>Skor</h3>
      <p>{{ $siswa->skor }}</p>
   </div>

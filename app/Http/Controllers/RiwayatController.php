@@ -72,4 +72,67 @@ class RiwayatController extends Controller
             'siswa'
         ));
     }
+
+    public function riwayatGuru(Request $request)
+    {
+        $search = $request->search;
+
+        $query = Pelanggaran::with(['siswa', 'jenisPelanggaran']);
+
+        if ($search) {
+            $query->whereHas('siswa', function ($q) use ($search) {
+                $q->where('nama', 'like', '%'.$search.'%');
+            });
+        }
+
+        $riwayat = $query->orderBy('tanggal', 'desc')->paginate(15)->withQueryString();
+
+        $totalPelanggaran = Pelanggaran::count();
+
+        $siswaPembinaan = Pelanggaran::selectRaw('id_siswa, SUM(poin) as total_poin')
+            ->groupBy('id_siswa')
+            ->having('total_poin', '>=', 50)
+            ->count();
+
+        return view('guru.riwayat', compact(
+            'riwayat',
+            'totalPelanggaran',
+            'siswaPembinaan',
+            'search'
+        ));
+    }
+
+    public function riwayatOrangTua()
+    {
+        // ambil orang tua dari user login
+        $orangTua = Auth::user()->orangTua;
+
+        if (! $orangTua) {
+            return back()->with('error', 'Data orang tua tidak ditemukan');
+        }
+
+        // ambil siswa (anak)
+        $siswa = $orangTua->siswa;
+
+        if (! $siswa) {
+            return back()->with('error', 'Data siswa tidak ditemukan');
+        }
+
+        // ambil pelanggaran anak
+        $riwayat = Pelanggaran::with(['jenisPelanggaran'])
+            ->where('id_siswa', $siswa->id_siswa)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
+        $totalPelanggaran = $riwayat->total();
+
+        $totalPoin = Pelanggaran::where('id_siswa', $siswa->id_siswa)->sum('poin');
+
+        return view('ortu.riwayat', compact(
+            'riwayat',
+            'totalPelanggaran',
+            'totalPoin',
+            'siswa'
+        ));
+    }
 }
