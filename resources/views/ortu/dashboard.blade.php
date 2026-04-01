@@ -21,8 +21,8 @@
         <header class="header">
             <div class="header-content">
                 <h2 class="logo">LOGO</h2>
-                <h1>Hello, Asep</h1>
-                <p class="subtitle">Selamat datang kembali, semoga harimu produktif ya</p>
+                <h1>Hello, {{ $user->username }}</h1>
+                <p class="subtitle">Selamat datang kembali, Pantau perkembangan anak Anda hari ini</p>
             </div>
         </header>
 
@@ -33,61 +33,53 @@
                 <!-- Notifikasi Card -->
                 <div class="card notifications-card">
                     <div class="notification-list">
-                        <div class="notification-item urgent">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">Rasyad Pelanggaran, @user</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
+ {{-- Pelanggaran --}}
+@forelse($pelanggaran as $item)
+    <div class="notification-item {{ $item->poin >= 20 ? 'urgent' : '' }}">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="notif-content">
+            <p class="notif-title">
+                {{ $siswa->nama }} melakukan pelanggaran: {{ $item->nama_pelanggaran }}
+            </p>
+            <p class="notif-date">
+                {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+            </p>
+        </div>
+    </div>
+@empty
+    <div class="notification-item">
+        <i class="fas fa-info-circle"></i>
+        <div class="notif-content">
+            <p class="notif-title">Tidak ada pelanggaran terbaru</p>
+        </div>
+    </div>
+@endforelse
 
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">SP 3 selesaikan</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
+{{-- Surat --}}
+@if($surat)
+    <div class="notification-item">
+        <i class="fas fa-envelope"></i>
+        <div class="notif-content">
+            <p class="notif-title">
+                {{ $surat->jenis_surat }} untuk {{ $siswa->nama }}
+            </p>
+            <p class="notif-date">
+                {{ \Carbon\Carbon::parse($surat->tanggal_cetak)->format('d M Y') }}
+            </p>
+        </div>
+    </div>
+@endif
 
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">Mendeteksi batas poin</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">J+ poin pelanggaran 1 hari</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">Laporan bullying</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-                    </div>
+{{-- Skor --}}
+<div class="notification-item">
+    <i class="fas fa-bell"></i>
+    <div class="notif-content">
+        <p class="notif-title">
+            Skor {{ $siswa->nama }} saat ini: <strong>{{ $skor }}</strong>
+        </p>
+        <p class="notif-date">Update terbaru</p>
+    </div>
+</div>
                 </div>
 
 
@@ -99,10 +91,7 @@
                 <div class="card points-card">
                     <div class="points-header">
                         <h3>Rekap poin</h3>
-                        <div class="points-tabs">
-                            <button class="tab-btn active">Tertib</button>
-                            <button class="tab-btn">Pembinaan</button>
-                        </div>
+                        
                     </div>
                     <canvas id="pointsChart"></canvas>
                 </div>
@@ -112,6 +101,11 @@
 @endsection
 
 @push('scripts')
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    window.dashboardData = {
+        tertib: {{ $tertib }},
+        pembinaan: {{ $pembinaan }}
+    };
+</script>
 <script src="{{ asset('js/ortu/dashboard.js') }}"></script>
 @endpush

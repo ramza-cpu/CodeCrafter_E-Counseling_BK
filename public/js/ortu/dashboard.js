@@ -1,42 +1,29 @@
 // Chart.js Configuration
 Chart.defaults.font.family = 'Segoe UI, sans-serif';
 
-// Points Doughnut Chart
-const pointsCtx = document.getElementById('pointsChart').getContext('2d');
-const pointsChart = new Chart(pointsCtx, {
+const dataDashboard = window.dashboardData;
+
+const ctx = document.getElementById('pointsChart').getContext('2d');
+
+const chart = new Chart(ctx, {
     type: 'doughnut',
     data: {
         labels: ['Tertib', 'Pembinaan'],
         datasets: [{
-            data: [75, 25],
-            backgroundColor: [
-                '#22c55e',
-                '#fbbf24'
-            ],
+            data: [dataDashboard.tertib, dataDashboard.pembinaan],
+            backgroundColor: ['#22c55e', '#fbbf24'],
             borderWidth: 0,
             cutout: '75%',
         }]
     },
     options: {
         responsive: true,
-        maintainAspectRatio: true,
         plugins: {
-            legend: {
-                display: false
-            },
+            legend: { display: false },
             tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                borderRadius: 8,
-                titleFont: {
-                    size: 13
-                },
-                bodyFont: {
-                    size: 12
-                },
                 callbacks: {
                     label: function(context) {
-                        return context.label + ': ' + context.parsed + '%';
+                        return context.label + ': ' + context.parsed;
                     }
                 }
             }
@@ -44,55 +31,28 @@ const pointsChart = new Chart(pointsCtx, {
     }
 });
 
+// Tab
+const tabs = document.querySelectorAll('.tab-btn');
 
-// Tab Switching for Points Chart
-const tabButtons = document.querySelectorAll('.tab-btn');
+tabs.forEach(tab => {
+    tab.addEventListener('click', function () {
 
-tabButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Remove active class from all tabs
-        tabButtons.forEach(b => b.classList.remove('active'));
-        
-        // Add active class to clicked tab
+        tabs.forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-        
-        // Update chart data based on selected tab
-        const tabText = this.textContent;
-        
-        if (tabText === 'Tertib') {
-            pointsChart.data.datasets[0].data = [75, 25];
-            pointsChart.data.datasets[0].backgroundColor = ['#22c55e', '#fbbf24'];
-        } else if (tabText === 'Pembinaan') {
-            pointsChart.data.datasets[0].data = [40, 60];
-            pointsChart.data.datasets[0].backgroundColor = ['#ef4444', '#f59e0b'];
-        }
-        
-        pointsChart.update('active');
-    });
-});
 
-// Mood Navigation (Previous/Next week)
-const moodNavButtons = document.querySelectorAll('.mood-nav-btn');
-let currentWeekOffset = 0;
-
-moodNavButtons.forEach((btn, index) => {
-    btn.addEventListener('click', function() {
-        if (index === 0) {
-            // Previous week
-            currentWeekOffset--;
+        if (this.textContent.trim() === 'Tertib') {
+            chart.data.datasets[0].data = [
+                dataDashboard.tertib,
+                dataDashboard.pembinaan
+            ];
         } else {
-            // Next week
-            currentWeekOffset++;
+            chart.data.datasets[0].data = [
+                dataDashboard.pembinaan,
+                dataDashboard.tertib
+            ];
         }
-        
-        // Generate random mood data for demo
-        const newData = Array.from({length: 6}, () => Math.floor(Math.random() * 5) + 1);
-        currentMoodData = newData;
-        
-        moodChart.data.datasets[0].data = newData;
-        moodChart.update('active');
-        
-        console.log('Week offset:', currentWeekOffset);
+
+        chart.update();
     });
 });
 

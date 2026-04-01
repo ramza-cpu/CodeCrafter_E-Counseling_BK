@@ -95,10 +95,7 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(['role:guru'])->group(function () {
 
-        Route::get('/guru', function () {
-            return view('guru.dashboard');
-        })->name('guru.dashboard');
-
+        Route::get('/guru', [DashboardController::class, 'guru'])->name('guru.dashboard');
         Route::get('/guru/riwayat', [RiwayatController::class, 'riwayatGuru'])
             ->name('guru.riwayat');
 
@@ -111,9 +108,7 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(['role:siswa'])->group(function () {
 
-        Route::get('/siswa', function () {
-            return view('siswa.dashboard');
-        })->name('siswa.dashboard');
+        Route::get('/siswa', [DashboardController::class, 'siswa'])->name('siswa.dashboard');
 
         // PESAN SISWA
         Route::get('/siswa/pesan', [ChatController::class, 'indexSiswa'])->name('siswa.pesan');
@@ -132,9 +127,7 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(['role:ortu'])->group(function () {
 
-        Route::get('/ortu', function () {
-            return view('ortu.dashboard');
-        })->name('ortu.dashboard');
+        Route::get('/ortu', [DashboardController::class, 'ortu'])->name('ortu.dashboard');
 
         Route::get('/ortu/riwayat', [RiwayatController::class, 'riwayatOrangTua'])->name('ortu.riwayat');
 

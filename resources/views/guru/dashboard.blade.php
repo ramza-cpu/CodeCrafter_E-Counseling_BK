@@ -20,7 +20,7 @@
       <div class="top-section">
         <div class="welcome">
           <p class="date"></p>
-          <h1>Hello, Guru!</h1>
+          <h1>Hello, {{ $guru->nama }}</h1>
           <p class="sub">Ada beberapa update baru untuk anda</p>
         </div>
 
@@ -29,28 +29,14 @@
             <div class="icon">👥</div>
             <div>
               <span class="label">TOTAL MURID</span>
-              <h2>1,674</h2>
+              <h2>{{ number_format($totalMurid) }}</h2>
               <small>murid SMK BBC</small>
             </div>
           </div>
 
-          <div class="stat-card">
-            <div class="icon">👩‍🏫</div>
-            <div>
-              <span class="label">SESI KONSELING</span>
-              <h2>132</h2>
-              <small>sesi bulan ini</small>
-            </div>
-          </div>
 
-          <div class="stat-card">
-            <div class="icon">🏃</div>
-            <div>
-              <span class="label">BUTUH PERHATIAN</span>
-              <h2>12</h2>
-              <small>perlu tindak lanjut</small>
-            </div>
-          </div>
+
+
         </div>
       </div>
 
@@ -71,27 +57,39 @@
       <div class="bottom-widgets">
         <div class="widget-card">
           <h4>Notifikasi darurat 🚨</h4>
-          <div class="notif-item">
-            <b>Bimo</b>
-            <p>SP3 diterbitkan</p>
-            <span>Feb 02, 2026</span>
-          </div>
-          <div class="notif-item">
-            <b>Wati Sukosih XII RPL 7</b>
-            <p>Mendapat teguran</p>
-            <span>Feb 02, 2026</span>
-          </div>
+@forelse($notifDarurat as $item)
+<div class="notif-item">
+    <b>{{ $item->nama }}</b>
+    <p>{{ $item->jenis_surat }}</p>
+    <span>{{ \Carbon\Carbon::parse($item->tanggal_cetak)->format('d M Y') }}</span>
+</div>
+@empty
+<p>Tidak ada notifikasi</p>
+@endforelse
         </div>
 
         <div class="widget-card">
           <h4>Rekap poin</h4>
           <canvas id="donutChart"></canvas>
 
-          <div class="rekap-row"><span>Tertib</span><span>62.5%</span></div>
-          <div class="rekap-row"><span>Pembinaan</span><span>25%</span></div>
-          <div class="rekap-row">
-            <span>Prioritas/SP</span><span>12.5%</span>
-          </div>
+@php
+$total = $tertib + $pembinaan + $prioritas;
+@endphp
+
+<div class="rekap-row">
+    <span>Tertib</span>
+    <span>{{ $total ? round(($tertib/$total)*100,1) : 0 }}%</span>
+</div>
+
+<div class="rekap-row">
+    <span>Pembinaan</span>
+    <span>{{ $total ? round(($pembinaan/$total)*100,1) : 0 }}%</span>
+</div>
+
+<div class="rekap-row">
+    <span>Prioritas/SP</span>
+    <span>{{ $total ? round(($prioritas/$total)*100,1) : 0 }}%</span>
+</div>
         </div>
 
         <div class="widget-card">
@@ -104,31 +102,22 @@
           </ul>
         </div>
 
-        <div class="widget-card">
-          <h4>Notifikasi pesan 💬</h4>
 
-          <div class="message-item">
-            <div class="avatar">S</div>
-            <div>
-              <b>Strawberry shortcake</b>
-              <p>Izin terlambat</p>
-              <span>1m</span>
-            </div>
-          </div>
-
-          <div class="message-item">
-            <div class="avatar">I</div>
-            <div>
-              <b>Ikan terbang</b>
-              <p>Meminta bimbingan</p>
-              <span>12m</span>
-            </div>
-          </div>
-        </div>
       </div>
 @endsection
 
 @push('scripts')
+<script>
+window.guruData = {
+    statistikBulanan: @json($statistikBulanan),
+    kategoriKasus: @json($kategoriKasus),
+    rekap: {
+        tertib: {{ $tertib }},
+        pembinaan: {{ $pembinaan }},
+        prioritas: {{ $prioritas }}
+    }
+};
+</script>
 <script src="{{ asset('js/guru/dashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @endpush

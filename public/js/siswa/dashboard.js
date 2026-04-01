@@ -1,18 +1,20 @@
 // Chart.js Configuration
 Chart.defaults.font.family = 'Segoe UI, sans-serif';
 
-// Points Doughnut Chart
+// Ambil data dari Laravel
+const dataDashboard = window.dashboardData;
+
+// Ambil canvas
 const pointsCtx = document.getElementById('pointsChart').getContext('2d');
+
+// INIT CHART (PAKAI DATA DINAMIS)
 const pointsChart = new Chart(pointsCtx, {
     type: 'doughnut',
     data: {
         labels: ['Tertib', 'Pembinaan'],
         datasets: [{
-            data: [75, 25],
-            backgroundColor: [
-                '#22c55e',
-                '#fbbf24'
-            ],
+            data: [dataDashboard.tertib, dataDashboard.pembinaan],
+            backgroundColor: ['#22c55e', '#fbbf24'],
             borderWidth: 0,
             cutout: '75%',
         }]
@@ -21,27 +23,48 @@ const pointsChart = new Chart(pointsCtx, {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-            legend: {
-                display: false
-            },
+            legend: { display: false },
             tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                borderRadius: 8,
-                titleFont: {
-                    size: 13
-                },
-                bodyFont: {
-                    size: 12
-                },
                 callbacks: {
                     label: function(context) {
-                        return context.label + ': ' + context.parsed + '%';
+                        return context.label + ': ' + context.parsed;
                     }
                 }
             }
         }
     }
+});
+
+
+// 🔁 TAB SWITCHING (DINAMIS)
+const tabButtons = document.querySelectorAll('.tab-btn');
+
+tabButtons.forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        // Reset active
+        tabButtons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const tabText = this.textContent.trim();
+
+        if (tabText === 'Pembinaan') {
+            pointsChart.data.datasets[0].data = [
+                dataDashboard.tertib,
+                dataDashboard.pembinaan
+            ];
+            pointsChart.data.datasets[0].backgroundColor = ['#22c55e', '#fbbf24'];
+
+        } else if (tabText === 'Tertib') {
+            pointsChart.data.datasets[0].data = [
+                dataDashboard.pembinaan,
+                dataDashboard.tertib
+            ];
+            pointsChart.data.datasets[0].backgroundColor = ['#ef4444', '#f59e0b'];
+        }
+
+        pointsChart.update();
+    });
 });
 
 // Mood Line Chart
@@ -171,32 +194,6 @@ moodButtons.forEach(btn => {
         
         // Optional: Save to backend
         console.log('Mood selected:', mood);
-    });
-});
-
-// Tab Switching for Points Chart
-const tabButtons = document.querySelectorAll('.tab-btn');
-
-tabButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Remove active class from all tabs
-        tabButtons.forEach(b => b.classList.remove('active'));
-        
-        // Add active class to clicked tab
-        this.classList.add('active');
-        
-        // Update chart data based on selected tab
-        const tabText = this.textContent;
-        
-        if (tabText === 'Tertib') {
-            pointsChart.data.datasets[0].data = [75, 25];
-            pointsChart.data.datasets[0].backgroundColor = ['#22c55e', '#fbbf24'];
-        } else if (tabText === 'Pembinaan') {
-            pointsChart.data.datasets[0].data = [40, 60];
-            pointsChart.data.datasets[0].backgroundColor = ['#ef4444', '#f59e0b'];
-        }
-        
-        pointsChart.update('active');
     });
 });
 

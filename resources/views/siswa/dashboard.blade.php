@@ -21,7 +21,7 @@
         <header class="header">
             <div class="header-content">
                 <h2 class="logo">LOGO</h2>
-                <h1>Hello, Robi</h1>
+                <h1>Hello, {{ $siswa->nama }}</h1>
                 <p class="subtitle">Selamat datang kembali, semoga harimu produktif ya</p>
             </div>
         </header>
@@ -32,65 +32,53 @@
             <div class="left-column">
                 <!-- Notifikasi Card -->
                 <div class="card notifications-card">
-                    <div class="notification-list">
-                        <div class="notification-item urgent">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">Rasyad Pelanggaran, @user</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
+<div class="notification-list">
 
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">SP 3 selesaikan</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
+    {{-- 1. Pelanggaran --}}
+    @foreach($pelanggaran as $item)
+        <div class="notification-item {{ $item->poin >= 20 ? 'urgent' : '' }}">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="notif-content">
+                <p class="notif-title">
+                    Pelanggaran: {{ $item->nama_pelanggaran }}
+                </p>
+                <p class="notif-date">
+                    {{ $item->created_at }}
+                </p>
+            </div>
+        </div>
+    @endforeach
 
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">Mendeteksi batas poin</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
+    {{-- 2. Surat --}}
+    @if($surat)
+        <div class="notification-item">
+            <i class="fas fa-envelope"></i>
+            <div class="notif-content">
+                <p class="notif-title">
+                    Surat Peringatan diterbitkan
+                </p>
+                <p class="notif-date">
+                    {{ $surat->created_at->format('M d Y') }}
+                </p>
+            </div>
+        </div>
+    @endif
 
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">J+ poin pelanggaran 1 hari</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
+    {{-- 3. Skor --}}
+    <div class="notification-item">
+        <i class="fas fa-bell"></i>
+        <div class="notif-content">
+            <p class="notif-title">
+                Skor kamu saat ini: {{ $skor }}
+            </p>
+            <p class="notif-date">
+                Update terbaru
+            </p>
+        </div>
+    </div>
 
-                        <div class="notification-item">
-                            <i class="fas fa-bell"></i>
-                            <div class="notif-content">
-                                <p class="notif-title">Laporan bullying</p>
-                                <p class="notif-date">Feb 02 2026</p>
-                            </div>
-                            <button class="notif-more">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-                    </div>
+</div>
                 </div>
-
-                <!-- Chat Section -->
 
                 
             </div>
@@ -152,6 +140,11 @@
 @endsection
 
 @push('scripts')
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    window.dashboardData = {
+        tertib: {{ $tertib }},
+        pembinaan: {{ $pembinaan }}
+    };
+</script>
 <script src="{{ asset('js/siswa/dashboard.js') }}"></script>
 @endpush

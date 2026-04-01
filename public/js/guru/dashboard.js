@@ -100,84 +100,70 @@ if (logoutBtn) {
 // ==========================
 // CHARTS
 // ==========================
-
+const data = window.guruData;
 // ================= DONUT =================
-const donutCanvas = document.getElementById("donutChart");
-if (donutCanvas) {
-  new Chart(donutCanvas, {
+const donut = document.getElementById("donutChart");
+
+if (donut) {
+  new Chart(donut, {
     type: "doughnut",
     data: {
-      labels: ["Tertib", "Pembinaan", "Prioritas/SP"],
-      datasets: [
-        {
-          data: [62.5, 25, 12.5],
-          backgroundColor: ["#7ea9e1", "#f4b400", "#ff6b6b"],
-          borderWidth: 0,
-        },
-      ],
+      labels: ["Tertib", "Pembinaan", "Prioritas"],
+      datasets: [{
+        data: [
+          guruData.rekap.tertib,
+          guruData.rekap.pembinaan,
+          guruData.rekap.prioritas
+        ],
+        backgroundColor: ["#7ea9e1", "#f4b400", "#ff6b6b"],
+        borderWidth: 0,
+      }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
+      plugins: { legend: { display: false } }
+    }
   });
 }
-
 // ================= LINE =================
-const lineCanvas = document.getElementById("lineChart");
-if (lineCanvas) {
-  new Chart(lineCanvas, {
+
+
+const bulanMap = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+const lineLabels = data.statistikBulanan.map(i => bulanMap[i.bulan - 1]);
+const lineData = data.statistikBulanan.map(i => i.total);
+
+new Chart(document.getElementById("lineChart"), {
     type: "line",
     data: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
-      datasets: [
-        {
-          label: "Jumlah Konseling",
-          data: [12, 19, 10, 15, 8, 20],
-          borderColor: "#7ea9e1",
-          backgroundColor: "rgba(126,169,225,0.2)",
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointBackgroundColor: "#7ea9e1",
-        },
-      ],
+        labels: lineLabels,
+        datasets: [{
+            data: lineData,
+            borderColor: "#7ea9e1",
+            backgroundColor: "rgba(126,169,225,0.2)",
+            fill: true,
+            tension: 0.4
+        }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-}
+        plugins: { legend: { display: false } }
+    }
+});
 
 // ================= BAR =================
-const barCanvas = document.getElementById("barChart");
-if (barCanvas) {
-  new Chart(barCanvas, {
+const barLabels = data.kategoriKasus.map(i => i.nama_pelanggaran);
+const barData = data.kategoriKasus.map(i => i.total);
+
+new Chart(document.getElementById("barChart"), {
     type: "bar",
     data: {
-      labels: ["Terlambat", "Bolos", "Konflik", "Pelanggaran"],
-      datasets: [
-        {
-          label: "Jumlah Kasus",
-          data: [10, 7, 14, 9],
-          backgroundColor: "#7ea9e1",
-          borderRadius: 8,
-        },
-      ],
+        labels: barLabels,
+        datasets: [{
+            data: barData,
+            backgroundColor: "#7ea9e1",
+            borderRadius: 8
+        }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-    },
-  });
-}
+        plugins: { legend: { display: false } }
+    }
+});
