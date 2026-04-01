@@ -8,7 +8,6 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // ✅ INI YANG BENAR
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 // use App\Events\MessageSent;
 
@@ -35,59 +34,58 @@ class ChatController extends Controller
         return response()->json($messages);
     }
 
-public function sendMessage(Request $request)
-{
-    try {
+    public function sendMessage(Request $request)
+    {
+        try {
 
-        $request->validate([
-            'id_chat' => 'required',
-            'message' => 'required|string',
-        ]);
-
-        $user = auth()->user();
-
-        $messageData = [
-            'id_chat' => $request->id_chat,
-            'sender_id' => $user->id_user,
-            'sender_role' => 'guru',
-            'message' => $request->message,
-            'created_at' => now(),
-        ];
-
-        // simpan pesan
-        DB::table('messages')->insert($messageData);
-
-        // update chat
-        DB::table('chats')
-            ->where('id_chat', $request->id_chat)
-            ->update([
-                'last_message' => $request->message,
-                'last_time' => now(),
+            $request->validate([
+                'id_chat' => 'required',
+                'message' => 'required|string',
             ]);
 
-        // 🔥 broadcast realtime
-        event(new MessageSent($messageData));
+            $user = auth()->user();
 
-        return response()->json([
-            'success' => true,
-            'message' => $messageData,
-            
-            
-        ]);
+            $messageData = [
+                'id_chat' => $request->id_chat,
+                'sender_id' => $user->id_user,
+                'sender_role' => 'guru',
+                'message' => $request->message,
+                'created_at' => now(),
+            ];
 
-    } catch (\Exception $e) {
+            // simpan pesan
+            DB::table('messages')->insert($messageData);
 
-        \Log::error('SEND MESSAGE ERROR', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine()
-        ]);
+            // update chat
+            DB::table('chats')
+                ->where('id_chat', $request->id_chat)
+                ->update([
+                    'last_message' => $request->message,
+                    'last_time' => now(),
+                ]);
 
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], 500);
+            // 🔥 broadcast realtime
+            event(new MessageSent($messageData));
+
+            return response()->json([
+                'success' => true,
+                'message' => $messageData,
+
+            ]);
+
+        } catch (\Exception $e) {
+
+            \Log::error('SEND MESSAGE ERROR', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 
     public function getChatList()
     {
@@ -202,66 +200,66 @@ public function sendMessage(Request $request)
     | KIRIM PESAN
     |--------------------------------------------------------------------------
     */
-public function sendMessageSiswa(Request $request)
-{
-    try {
+    public function sendMessageSiswa(Request $request)
+    {
+        try {
 
-        $request->validate([
-            'id_chat' => 'required',
-            'message' => 'required|string',
-        ]);
-
-        $user = auth()->user();
-
-        $siswa = DB::table('siswa')
-            ->where('id_user', $user->id_user)
-            ->first();
-
-        $chat = DB::table('chats')
-            ->where('id_chat', $request->id_chat)
-            ->first();
-
-        if (! $chat || $chat->id_siswa != $siswa->id_siswa) {
-            return response()->json(['success' => false, 'error' => 'Forbidden'], 403);
-        }
-
-        // 🔥 INI HARUS DI SINI
-        $message = [
-            'id_chat' => $request->id_chat,
-            'sender_id' => $user->id_user,
-            'sender_role' => 'siswa',
-            'message' => $request->message,
-            'created_at' => now(),
-        ];
-
-        DB::table('messages')->insert($message);
-
-        DB::table('chats')
-            ->where('id_chat', $request->id_chat)
-            ->update([
-                'last_message' => $request->message,
-                'last_time' => now(),
+            $request->validate([
+                'id_chat' => 'required',
+                'message' => 'required|string',
             ]);
 
-        // 🔥 INI JUGA DI SINI
-        event(new MessageSent($message));
+            $user = auth()->user();
 
-        return response()->json([
-            'success' => true,
-            'message' => $message
-        ]);
+            $siswa = DB::table('siswa')
+                ->where('id_user', $user->id_user)
+                ->first();
 
-    } catch (\Exception $e) {
+            $chat = DB::table('chats')
+                ->where('id_chat', $request->id_chat)
+                ->first();
 
-        \Log::error('SEND MESSAGE ERROR', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine()
-        ]);
+            if (! $chat || $chat->id_siswa != $siswa->id_siswa) {
+                return response()->json(['success' => false, 'error' => 'Forbidden'], 403);
+            }
 
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], 500);
+            // 🔥 INI HARUS DI SINI
+            $message = [
+                'id_chat' => $request->id_chat,
+                'sender_id' => $user->id_user,
+                'sender_role' => 'siswa',
+                'message' => $request->message,
+                'created_at' => now(),
+            ];
+
+            DB::table('messages')->insert($message);
+
+            DB::table('chats')
+                ->where('id_chat', $request->id_chat)
+                ->update([
+                    'last_message' => $request->message,
+                    'last_time' => now(),
+                ]);
+
+            // 🔥 INI JUGA DI SINI
+            event(new MessageSent($message));
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+
+        } catch (\Exception $e) {
+
+            \Log::error('SEND MESSAGE ERROR', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 }

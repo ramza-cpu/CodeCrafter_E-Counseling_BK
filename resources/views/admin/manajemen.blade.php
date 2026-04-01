@@ -89,14 +89,7 @@
                 <div class="table-card">
                     <div class="table-header">
                         <h3>Daftar Siswa</h3>
-                        <div class="table-actions">
-                            <button class="btn-icon" title="Export Excel">
-                                <i class="fas fa-file-excel"></i>
-                            </button>
-                            <button class="btn-icon" title="Print">
-                                <i class="fas fa-print"></i>
-                            </button>
-                        </div>
+                        
                     </div>
 
                     <div class="table-container">

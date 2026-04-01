@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RiwayatController extends Controller
 {
@@ -45,5 +46,30 @@ class RiwayatController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Status berhasil diubah menjadi selesai');
+    }
+
+    public function riwayatSiswa()
+    {
+        $siswa = Auth::user()->siswa;
+
+        if (! $siswa) {
+            return back()->with('error', 'Data siswa tidak ditemukan');
+        }
+
+        $riwayat = Pelanggaran::with(['siswa', 'jenisPelanggaran'])
+            ->where('id_siswa', $siswa->id_siswa)
+            ->orderBy('tanggal', 'desc')
+            ->paginate(100);
+
+        $totalPelanggaran = Pelanggaran::where('id_siswa', $siswa->id_siswa)->count();
+
+        $totalPoin = Pelanggaran::where('id_siswa', $siswa->id_siswa)->sum('poin');
+
+        return view('siswa.riwayat', compact(
+            'riwayat',
+            'totalPelanggaran',
+            'totalPoin',
+            'siswa'
+        ));
     }
 }

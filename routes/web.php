@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
         // RIWAYAT PELANGGARAN SISWA
 
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
-        Route::put('/riwayat/{id}/selesai', [RiwayatController::class, 'selesai'])->name('riwayat.selesai');
+        Route::put('/riwayat/{id}/selesai', [RiwayatController::class, 'selesai'])->name('riwayat.selesai')->where('id', '[0-9]+');
     });
 
     /*
@@ -122,9 +122,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/siswa/chat/send', [ChatController::class, 'sendMessageSiswa']);
         Route::get('/siswa/chat/{id}', [ChatController::class, 'getMessagesSiswa'])->where('id', '[0-9]+');
 
-        Route::get('/siswa/riwayat', function () {
-            return view('siswa.riwayat');
-        })->name('siswa.riwayat');
+        Route::get('/siswa/riwayat', [RiwayatController::class, 'riwayatSiswa'])->name('siswa.riwayat');
     });
 
     /*
