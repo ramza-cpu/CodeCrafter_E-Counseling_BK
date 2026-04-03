@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Cetak')
+@section('title', 'Manajemen Data Siswa')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/admin/manajemen.css') }}">
@@ -25,21 +25,21 @@
                         <i class="fas fa-plus"></i> Tambah Siswa
                     </button>
                     
-                    <div class="search-filter">
-<form method="GET" action="{{ route('admin.manajemen') }}">
-<div class="search-box">
-    <i class="fas fa-search"></i>
-    <input type="text" name="search" placeholder="Cari nama siswa..." value="{{ request('search') }}">
+<div class="search-filter">
+
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search" placeholder="Cari nama siswa...">
+    </div>
+
+    <select id="filterKelas" class="filter-select">
+        <option value="">Semua Kelas</option>
+        <option value="X">Kelas X</option>
+        <option value="XI">Kelas XI</option>
+        <option value="XII">Kelas XII</option>
+    </select>
+
 </div>
-</form>
-                        
-                        <select id="filterKelas" class="filter-select">
-                            <option value="">Semua Kelas</option>
-                            <option value="X">Kelas X</option>
-                            <option value="XI">Kelas XI</option>
-                            <option value="XII">Kelas XII</option>
-                        </select>
-                    </div>
                 </div>
 
                 <!-- Stats Cards -->
@@ -108,49 +108,8 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-<tbody>
-@foreach($siswa as $data)
-<tr>
-    <td>{{ $data->id_siswa }}</td>
-    <td>{{ $data->user->username }}</td>
-    <td>{{ $data->nisn }}</td>
-    <td>{{ $data->nama }}</td>
-    <td>{{ $data->kelas }}</td>
-    <td>{{ $data->jenis_kelamin }}</td>
-    <td>{{ $data->alamat }}</td>
-    <td>{{ $data->no_hp }}</td>
-    <td>{{ $data->skor }}</td>
-<td>
-<div class="action-buttons">
-
-<button 
-class="btn-edit"
-data-id="{{ $data->id_siswa }}"
-data-username="{{ $data->user->username }}"
-data-email="{{ $data->user->email }}"
-data-nisn="{{ $data->nisn }}"
-data-nama="{{ $data->nama }}"
-data-kelas="{{ $data->kelas }}"
-data-jk="{{ $data->jenis_kelamin }}"
-data-alamat="{{ $data->alamat }}"
-data-nohp="{{ $data->no_hp }}"
-data-skor="{{ $data->skor }}"
->
-<i class="fas fa-edit"></i> Edit
-</button>
-
-
-<button 
-class="btn-delete"
-data-id="{{ $data->id_siswa }}"
->
-<i class="fas fa-trash"></i> Hapus
-</button>
-
-</div>
-</td>
-</tr>
-@endforeach
+<tbody id="table-siswa">
+    @include('admin.partials.table_siswa')
 </tbody>
                         </table>
                     </div>
@@ -250,6 +209,63 @@ data-id="{{ $data->id_siswa }}"
 @push('scripts')
 <script src="{{ asset('js/admin/manajemen.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const searchInput = document.getElementById('search');
+    const filterKelas = document.getElementById('filterKelas');
+    const tableBody = document.getElementById('table-siswa');
+
+    let delayTimer;
+
+    function fetchData() {
+        let search = searchInput.value.trim();
+        let kelas = filterKelas.value;
+
+        // 🔄 Loading biar user tau lagi proses
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="10" class="text-center">Loading...</td>
+            </tr>
+        `;
+
+        fetch(`{{ route('admin.manajemen') }}?search=${encodeURIComponent(search)}&kelas=${encodeURIComponent(kelas)}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+
+            // ❗ GANTI TOTAL ISI TABLE
+            tableBody.innerHTML = data;
+
+        })
+        .catch(error => {
+            console.log(error);
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="10" class="text-center text-danger">
+                        Terjadi kesalahan
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // 🔍 SEARCH (debounce biar tidak spam)
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(delayTimer);
+        delayTimer = setTimeout(fetchData, 300);
+    });
+
+    // 🎯 FILTER
+    filterKelas.addEventListener('change', function () {
+        fetchData();
+    });
+
+});
+</script>
 @if(session('success'))
 
 <script>

@@ -14,23 +14,38 @@ class SiswaController extends Controller
     {
         $query = Siswa::with('user');
 
-        // SEARCH
-        if ($request->search) {
-            $query->where('nama', 'like', '%'.$request->search.'%');
+        // AMBIL INPUT
+        $search = strtolower(trim($request->search));
+        $kelas = trim($request->kelas);
+
+        // 🔍 SEARCH NAMA DEPAN (HARUS PERSIS)
+        if (! empty($search)) {
+            $query->whereRaw(
+                "LOWER(SUBSTRING_INDEX(nama, ' ', 1)) = ?",
+                [$search]
+            );
         }
 
-        // FILTER KELAS
-        if ($request->kelas) {
-            $query->where('kelas', 'like', $request->kelas.'%');
+        // 🎯 FILTER KELAS (HARUS PERSIS, TIDAK BOLEH NYASAR)
+        if (! empty($kelas)) {
+            $query->whereRaw(
+                "SUBSTRING_INDEX(kelas, '-', 1) = ?",
+                [$kelas]
+            );
         }
 
         $siswa = $query->paginate(10);
 
-        // STAT CARD
+        // AJAX
+        if ($request->ajax()) {
+            return view('admin.partials.table_siswa', compact('siswa'))->render();
+        }
+
+        // STAT CARD (BIAR KONSISTEN JUGA)
         $totalSiswa = Siswa::count();
-        $kelasX = Siswa::where('kelas', 'like', 'X-%')->count();
-        $kelasXI = Siswa::where('kelas', 'like', 'XI-%')->count();
-        $kelasXII = Siswa::where('kelas', 'like', 'XII-%')->count();
+        $kelasX = Siswa::whereRaw("SUBSTRING_INDEX(kelas, '-', 1) = 'X'")->count();
+        $kelasXI = Siswa::whereRaw("SUBSTRING_INDEX(kelas, '-', 1) = 'XI'")->count();
+        $kelasXII = Siswa::whereRaw("SUBSTRING_INDEX(kelas, '-', 1) = 'XII'")->count();
 
         return view('admin.manajemen', compact(
             'siswa',
@@ -87,56 +102,56 @@ class SiswaController extends Controller
 
     }
 
-public function update(Request $request, $id)
-{
+    public function update(Request $request, $id)
+    {
 
-    try {
+        try {
 
-        $siswa = Siswa::findOrFail($id);
+            $siswa = Siswa::findOrFail($id);
 
-        $siswa->update([
-            'nisn' => $request->nisn,
-            'nama' => $request->nama,
-            'kelas' => $request->kelas,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
-            'skor' => $request->skor
-        ]);
+            $siswa->update([
+                'nisn' => $request->nisn,
+                'nama' => $request->nama,
+                'kelas' => $request->kelas,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+                'skor' => $request->skor,
+            ]);
 
-        $siswa->user->update([
-            'username' => $request->username,
-            'email' => $request->email
-        ]);
+            $siswa->user->update([
+                'username' => $request->username,
+                'email' => $request->email,
+            ]);
 
-        return redirect()->back()->with('success','Data berhasil diperbarui');
+            return redirect()->back()->with('success', 'Data berhasil diperbarui');
 
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-        return redirect()->back()->with('error','Gagal memperbarui data');
+            return redirect()->back()->with('error', 'Gagal memperbarui data');
 
-    }
-
-}
-
-public function destroy($id)
-{
-
-    try {
-
-        $siswa = Siswa::findOrFail($id);
-
-        $siswa->user()->delete();
-
-        $siswa->delete();
-
-        return redirect()->back()->with('success','Data berhasil dihapus');
-
-    } catch (\Exception $e) {
-
-        return redirect()->back()->with('error','Gagal menghapus data');
+        }
 
     }
 
-}
+    public function destroy($id)
+    {
+
+        try {
+
+            $siswa = Siswa::findOrFail($id);
+
+            $siswa->user()->delete();
+
+            $siswa->delete();
+
+            return redirect()->back()->with('success', 'Data berhasil dihapus');
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', 'Gagal menghapus data');
+
+        }
+
+    }
 }

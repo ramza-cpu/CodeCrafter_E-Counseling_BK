@@ -63,7 +63,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/manajemen', [SiswaController::class, 'index'])->name('admin.manajemen');
         Route::post('/manajemen/store', [SiswaController::class, 'store'])->name('manajemen.store');
         Route::put('/manajemen/update/{id}', [SiswaController::class, 'update'])->name('manajemen.update');
-        Route::put('/manajemen/update/{id}', [SiswaController::class, 'update'])->name('manajemen.update');
         Route::delete('/manajemen/delete/{id}', [SiswaController::class, 'destroy'])->name('manajemen.delete');
 
         // SCAN DATA SISWA
