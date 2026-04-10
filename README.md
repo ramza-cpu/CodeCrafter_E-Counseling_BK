@@ -94,9 +94,9 @@ SmartCounsel-BK adalah aplikasi berbasis web yang dibangun menggunakan framework
 
 ![Dashboard Orang Tua](docs/images/dashboard_ortu.png)
 
-### 📈 Grafik Statistik
+### 📈 Riwayat Pelanggaran Siswa
 
-![Chart](docs/images/chart.png)
+![Chart](docs/images/riwayat.png)
 
 ### 💬 Fitur Chat
 
