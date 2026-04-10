@@ -22,9 +22,9 @@ return new class extends Migration
                 ->constrained('users', 'id_user')
                 ->cascadeOnDelete();
 
-            $table->string('nama_ayah', 32);
-            $table->string('nama_ibu', 32);
-            $table->string('no_hp', 12);
+            $table->string('nama_ayah', 50);
+            $table->string('nama_ibu', 50);
+            $table->string('no_hp', 20);
             $table->text('alamat');
 
             $table->timestamps();

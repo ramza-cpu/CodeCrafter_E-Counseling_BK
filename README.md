@@ -1,59 +1,289 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 SmartCounsel-BK
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Informasi Bimbingan Konseling berbasis web untuk membantu sekolah dalam mengelola data siswa, pelanggaran, serta komunikasi antara guru BK, siswa, dan orang tua.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Deskripsi Aplikasi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+SmartCounsel-BK adalah aplikasi berbasis web yang dibangun menggunakan framework Laravel. Sistem ini dirancang untuk mendigitalisasi proses bimbingan konseling di sekolah agar lebih efektif, terstruktur, dan mudah diakses oleh berbagai pihak (Admin, Guru BK, Siswa, dan Orang Tua).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🎯 Tujuan Pengembangan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Mempermudah pengelolaan data siswa
+- Mencatat dan memonitor pelanggaran siswa
+- Menyediakan komunikasi (chat) antara siswa dan guru BK
+- Menyajikan data dalam bentuk dashboard interaktif
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🚀 Fitur Utama
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 👨‍🏫 Admin / Guru BK
 
-### Premium Partners
+- Manajemen data siswa
+- Input pelanggaran dan poin
+- Monitoring riwayat pelanggaran
+- Dashboard statistik (chart)
+- Fitur chat dengan siswa
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 🎓 Siswa
 
-## Contributing
+- Melihat riwayat pelanggaran
+- Melihat total poin
+- Chat dengan guru BK
+- Dashboard personal
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 👨‍👩‍👧 Orang Tua
 
-## Code of Conduct
+- Monitoring aktivitas siswa
+- Melihat riwayat pelanggaran anak
+- Dashboard ringkasan
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🛠️ Teknologi & Library
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Backend
 
-## License
+- PHP (Native)
+- Laravel Framework
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Frontend
+
+- Blade Template Engine
+- JavaScript
+- AJAX
+
+### Library Tambahan
+
+- Chart.js (visualisasi data)
+- Laravel Eloquent ORM
+- Laravel Authentication
+
+### Database
+
+- MySQL
+
+### Tools
+
+- XAMPP (Apache & MySQL)
+- Composer
+- Node.js & NPM
+- Git & GitHub
+
+---
+
+## 📸 Screenshot Aplikasi
+
+### 🔐 Halaman Login
+
+![Login](docs/images/login.png)
+
+### 📊 Dashboard Admin
+
+![Dashboard Admin](docs/images/dashboard_admin.png)
+
+### 📊 Dashboard Siswa
+
+![Dashboard Siswa](docs/images/dashboard_siswa.png)
+
+### 📊 Dashboard Orang Tua
+
+![Dashboard Orang Tua](docs/images/dashboard_ortu.png)
+
+### 📈 Grafik Statistik
+
+![Chart](docs/images/chart.png)
+
+### 💬 Fitur Chat
+
+![Chat](docs/images/chat.png)
+
+### 📋 Riwayat Pelanggaran
+
+![Riwayat](docs/images/riwayat.png)
+
+---
+
+## ⚙️ Cara Instalasi di Komputer Lain
+
+### 1. Persiapan Software
+
+Pastikan sudah menginstall:
+
+- XAMPP
+- Composer
+- Node.js
+- Git
+
+---
+
+### 2. Clone Project
+
+```bash
+git clone https://github.com/ramza-cpu/CodeCrafter_E-Counseling_BK.git
+cd smartcounsel-bk
+```
+
+---
+
+### 3. Install Dependency
+
+```bash
+composer install
+npm install
+```
+
+---
+
+### 4. Konfigurasi Environment
+
+```bash
+cp .env.example .env
+```
+
+Edit file `.env`:
+
+```env
+DB_DATABASE=smartcounsel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+### 5. Import Database
+
+#### 📌 Langkah Import smartcounsel.sql
+
+1. Buka **phpMyAdmin**
+2. Buat database baru:
+
+    ```
+    smartcounsel
+    ```
+
+3. Klik database tersebut
+4. Pilih menu **Import**
+5. Upload file:
+
+    ```
+    smartcounsel.sql
+    ```
+
+6. Klik **Go / Import**
+
+---
+
+### 6. Generate Key
+
+```bash
+php artisan key:generate
+```
+
+---
+
+### 7. Jalankan Server
+
+```bash
+php artisan serve
+```
+
+Akses aplikasi:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 🔐 Akun Login (Jika Ada)
+
+| Role      | Username  | Password |
+| --------- | --------- | -------- |
+| Admin     | [admin]   | password |
+| Guru      | [guru]    | password |
+| Orang Tua | [asep]    | password |
+| Siswa     | [ramizud] | 123456   |
+
+---
+
+## 📂 Struktur Folder Penting
+
+```
+app/                → Logic aplikasi
+routes/             → Routing
+resources/views/    → Tampilan (Blade)
+public/             → Asset (CSS, JS, Images)
+database/           → Migration & Seeder
+```
+
+---
+
+## 🧪 Troubleshooting
+
+### ❌ Error Class / Autoload
+
+```bash
+composer dump-autoload
+```
+
+---
+
+### ❌ Error Cache Laravel
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+```
+
+---
+
+### ❌ Error Database
+
+- Pastikan MySQL berjalan di XAMPP
+- Cek konfigurasi `.env`
+- Pastikan database sudah diimport
+
+### ❌ Port 8000 Sudah Digunakan
+
+Gunakan port lain:
+
+```bash
+php artisan serve --port=8001
+```
+
+---
+
+## 📈 Pengembangan Selanjutnya
+
+- Notifikasi real-time
+- Export laporan (PDF / Excel)
+- Role & permission lebih detail
+- Pesan dapat diterima tanpa perlu refresh halaman
+
+---
+
+## 👨‍💻 Developer
+
+Tim Pengembang:
+
+- Nurul Azni
+- Rian Firmansah
+- M. Ramza Ramadhan
+
+---
+
+## 📄 Lisensi
+
+Digunakan untuk keperluan pembelajaran dan pengembangan.
+
+---
+
+## ⭐ Penutup
+
+SmartCounsel-BK diharapkan dapat membantu meningkatkan efektivitas layanan bimbingan konseling di sekolah melalui sistem digital yang modern dan terintegrasi.

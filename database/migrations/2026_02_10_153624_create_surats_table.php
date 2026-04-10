@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('nomor_surat', 50);
             $table->string('jenis_surat', 50);
             $table->dateTime('tanggal_cetak');
-            $table->text('isi_surat');
+            $table->string('jenis_pelanggaran', 50);
 
             $table->enum('status', ['pending', 'tercetak'])
                 ->default('pending');

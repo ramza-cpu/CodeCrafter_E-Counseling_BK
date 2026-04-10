@@ -18,10 +18,10 @@ return new class extends Migration
                 ->constrained('users', 'id_user')
                 ->cascadeOnDelete();
 
-            $table->string('nip', 18)->unique();
-            $table->string('nama', 32);
+            $table->string('nip', 30)->unique();
+            $table->string('nama', 50);
             $table->string('email', 32)->unique();
-            $table->string('no_hp', 12);
+            $table->string('no_hp', 20);
             $table->enum('jenis_kelamin', ['L', 'P']);
 
             $table->timestamps();

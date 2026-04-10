@@ -150,7 +150,7 @@ body {
 
 .widget-card:hover {
   transform: translateY(-5px);
-}
+} 
 
 .widget-card h4 {
   margin-bottom: 15px;

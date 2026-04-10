@@ -546,7 +546,7 @@ body {
 
 .chat-items::-webkit-scrollbar-thumb:hover,
 .chat-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 140, 255, 0.5);
+  background: rgba(229, 238, 255, 0.808);
 }
 
 /* =============================================

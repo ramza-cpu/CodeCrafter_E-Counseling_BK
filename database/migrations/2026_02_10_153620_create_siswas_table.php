@@ -18,14 +18,13 @@ return new class extends Migration
                 ->constrained('users', 'id_user')
                 ->cascadeOnDelete();
 
-            $table->string('nisn', 10)->unique();
-            $table->string('nama', 32);
+            $table->string('nisn', 20)->unique();
+            $table->string('nama', 50);
             $table->string('kelas', 20);
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->text('alamat');
-            $table->string('no_hp', 12);
-            $table->integer('skor')->default(100);
-            $table->string('qr_code')->nullable();
+            $table->string('no_hp', 20);
+            $table->integer('skor')->default(0);
 
             $table->timestamps();
         });
